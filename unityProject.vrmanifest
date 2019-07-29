@@ -1,0 +1,16 @@
+{
+  "source": "Unity",
+  "applications": [
+    {
+      "app_key": "application.generated.unity.memoryman.exe",
+      "launch_type": "url",
+      "url": "steam://launch/",
+      "action_manifest_path": "C:\\Users\\JSG MakerSpace\\Desktop\\WillVR\\TombVoyage\\TombVoyage-master\\actions.json",
+      "strings": {
+        "en_us": {
+          "name": "MemoryMan [Testing]"
+        }
+      }
+    }
+  ]
+}
