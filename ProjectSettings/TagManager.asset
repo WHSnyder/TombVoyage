@@ -10,6 +10,7 @@ TagManager:
   - Hand
   - Joy
   - Chair
+  - Climb
   layers:
   - Default
   - TransparentFX

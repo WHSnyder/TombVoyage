@@ -39,7 +39,7 @@ public class MyHand : MonoBehaviour
         }
         
         if (!SteamVR_Input.GetState("Point", SteamVR_Input_Sources.RightHand) && !SteamVR_Input.GetState("GrabPinch", SteamVR_Input_Sources.RightHand)){
-    
+            //fix this workaround soon...
             if (!gameObject.name.Contains("Left")){
 
                 GameObject coll = updatePointer();
