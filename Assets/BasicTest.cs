@@ -17,15 +17,16 @@ public class BasicTest : MonoBehaviour
     void Start()
     {
         //leftHand = transform.Find("Player/SteamVRObjects/LeftHand").gameObject;
-       // rightHand = transform.Find("Player/SteamVRObjects/RightHand").gameObject;
+        // rightHand = transform.Find("Player/SteamVRObjects/RightHand").gameObject;
+        GetComponent<Rigidbody>().AddForce(Vector3.forward, ForceMode.Acceleration);//  ..velocity = Vector3.forward;
     }
 
     // Update is called once per frame
     void Update(){
 
         if (!SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.RightHand)){
-            holding = false;
-            GetComponent<Rigidbody>().isKinematic = false;
+           // holding = false;
+           // GetComponent<Rigidbody>().isKinematic = false;
         }
 
 
@@ -44,7 +45,7 @@ public class BasicTest : MonoBehaviour
         //Collider coll = collision.contacts[0].thisCollider;
         //Collider other = collision.contacts[0].otherCollider;
         
-        if (other.gameObject.CompareTag("Climb") && !holding)// && coll.gameObject.CompareTag("Hand"))
+       /* if (other.gameObject.CompareTag("Climb") && !holding)// && coll.gameObject.CompareTag("Hand"))
         {
             if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.RightHand))
             {
@@ -55,7 +56,7 @@ public class BasicTest : MonoBehaviour
 
                 GetComponent<Rigidbody>().isKinematic = true;
             }
-        }
+        }*/
 
     }
 }
