@@ -16,10 +16,33 @@ namespace Valve.VR
     {
 
         public bool contact = false;
+        public Vector3 contactNormal;
+
+
+        public bool hold = false;
+
         public Transform player;
+        private Rigidbody playerRig;
 
         private Vector3 lastPos;
+        private Vector3 handForce;
 
+        override
+        protected void Start()
+        {
+            if (poseAction == null)
+            {
+                Debug.LogError("<b>[SteamVR]</b> No pose action set for this component");
+                return;
+            }
+
+            CheckDeviceIndex();
+
+            if (origin == null)
+                origin = this.transform.parent;
+
+            playerRig = player.GetComponent<Rigidbody>();
+        }
 
         private void SteamVR_Behaviour_Pose_OnUpdate(SteamVR_Action_Pose fromAction, SteamVR_Input_Sources fromSource)
         {
@@ -37,16 +60,8 @@ namespace Valve.VR
         protected void UpdateTransform(){
 
             CheckDeviceIndex();
-            if (!contact){
 
-                transform.localPosition = poseAction[inputSource].localPosition;
-                transform.localRotation = poseAction[inputSource].localRotation;
-
-                lastPos = transform.position;
-            }
-            else
-            {
-
+            if (hold){
                 transform.localPosition = poseAction[inputSource].localPosition;
                 transform.localRotation = poseAction[inputSource].localRotation;
 
@@ -54,6 +69,28 @@ namespace Valve.VR
 
                 transform.position = lastPos;
             }
+            else if (contact){
+                transform.localPosition = poseAction[inputSource].localPosition;
+                transform.localRotation = poseAction[inputSource].localRotation;
+
+                Vector3 diff = Vector3.Normalize( transform.position - lastPos );
+                float dot = Vector3.Dot(diff, contactNormal);
+
+                Debug.Log("Pushing off with dot of: " + dot);
+
+                if (dot < -0.7){
+                    player.GetComponent<Rigidbody>().velocity = contactNormal;
+                }
+
+                lastPos = transform.position;              
+            }
+            else {
+                transform.localPosition = poseAction[inputSource].localPosition;
+                transform.localRotation = poseAction[inputSource].localRotation;
+
+                lastPos = transform.position;
+            }
+            
         }
     }
 }

@@ -32,6 +32,8 @@ public class BasicTest : MonoBehaviour
         leftHandler = leftHand.GetComponent<SteamVR_Will>();
         rightHandler = rightHand.GetComponent<SteamVR_Will>();
 
+        GetComponent<Rigidbody>().velocity = 1 * transform.forward;
+
     }
 
     // Update is called once per frame
@@ -39,41 +41,64 @@ public class BasicTest : MonoBehaviour
 
         if (!SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.RightHand)){
             rightHold = false;
-            rightHandler.contact = false;
+            rightHandler.hold = false;
+            //rightHandler.contact = false;
         }
 
         if (!SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.LeftHand))
         {
             leftHold = false;
-            leftHandler.contact = false;
+            leftHandler.hold = false;
+           // leftHandler.contact = false;
         }
 
         if (!leftHold && !rightHold)
         {
-            GetComponent<Rigidbody>().isKinematic = false;
+            //GetComponent<Rigidbody>().isKinematic = false;
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnCollisionStay(Collision collision)
     {
         Collider coll = collision.contacts[0].thisCollider;
         Collider other = collision.contacts[0].otherCollider;
         
-        if (other.gameObject.CompareTag("Climb") && coll.gameObject.CompareTag("Hand"))
-        {
-            if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.RightHand) && coll.gameObject.name[0] == 'R')
-            {
-                rightHold = true;
-                GetComponent<Rigidbody>().isKinematic = true;
-                rightHandler.contact = true;
-            }
+        if (other.gameObject.CompareTag("Climb") && coll.gameObject.CompareTag("Hand")){
+            //if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.Any)){
+            if (coll.gameObject.name[0] == 'R'){
+                //rightHold = true;
+                //GetComponent<Rigidbody>().isKinematic = true;
+                //rightHandler.hold = true;
 
-            if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.LeftHand))
-            {
-                leftHold = true;
-                GetComponent<Rigidbody>().isKinematic = true;
-                leftHandler.contact = true;
+                Debug.Log("right hand collision,...");
+
+                rightHandler.contact = true;
+                rightHandler.contactNormal = collision.GetContact(0).normal;
             }
+            else{
+                //leftHold = true;
+                // GetComponent<Rigidbody>().isKinematic = true;
+                //leftHandler.hold = true;
+
+                leftHandler.contact = true;
+                leftHandler.contactNormal =  collision.GetContact(0).normal;
+            }             
+            //}
         }
+    }
+
+
+    void OnCollisionExit(Collision other){
+
+        rightHold = false;
+        GetComponent<Rigidbody>().isKinematic = false;
+        rightHandler.hold = false;
+
+        rightHandler.contact = false;
+
+        leftHold = false;
+        leftHandler.hold = false;
+
+        leftHandler.contact = false;
     }
 }
