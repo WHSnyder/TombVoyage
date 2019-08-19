@@ -24,7 +24,11 @@ namespace Valve.VR
         public Transform player;
         private Rigidbody playerRig;
 
+        public Vector3 pushVel;
+
         private Vector3 lastPos;
+        private Vector3 lastPosLocal;
+
         private Vector3 handForce;
 
         override
@@ -70,22 +74,29 @@ namespace Valve.VR
                 transform.localPosition = poseAction[inputSource].localPosition;
                 transform.localRotation = poseAction[inputSource].localRotation;
 
-                Vector3 diff = Vector3.Normalize( transform.position - lastPos );
+                Vector3 diff = (transform.localPosition - lastPosLocal);
                 float dot = Vector3.Dot(diff, contactNormal);
+                float normedDot = Vector3.Dot(Vector3.Normalize(diff), contactNormal);
 
-                Debug.Log("Pushing off with dot of: " + dot);
+                Debug.Log("Pushing off with dot of: " + normedDot);
+                Debug.Log("Diff vector: " + diff.ToString());// + " normal vector: " + contactNormal.ToString() );
 
-                if (dot < -0.7){
-                    player.GetComponent<Rigidbody>().velocity = contactNormal;
+
+                if (normedDot < -0.5){
+                    pushVel =  pushVel + 10.0f* dot * contactNormal;
+                    player.GetComponent<Rigidbody>().velocity += pushVel;
+                    Debug.Log("push vel: " + pushVel);
                 }
 
-                lastPos = transform.position;              
+                lastPos = transform.position;
+                lastPosLocal = transform.localPosition;
             }
             else {
                 transform.localPosition = poseAction[inputSource].localPosition;
                 transform.localRotation = poseAction[inputSource].localRotation;
 
                 lastPos = transform.position;
+                lastPosLocal = transform.localPosition;
             }
         }
     }

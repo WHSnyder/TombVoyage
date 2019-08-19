@@ -56,12 +56,16 @@ public class BasicTest : MonoBehaviour
         {
             //GetComponent<Rigidbody>().isKinematic = false;
         }
+
+        Debug.Log("Player vel: " + GetComponent<Rigidbody>().velocity);
     }
 
-    void OnCollisionStay(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
         Collider coll = collision.contacts[0].thisCollider;
         Collider other = collision.contacts[0].otherCollider;
+
+        Debug.Log(coll.gameObject.name + " collided at normal: " + collision.GetContact(0).normal.ToString());
         
         if (other.gameObject.CompareTag("Climb") && coll.gameObject.CompareTag("Hand")){
             //if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.Any)){
@@ -90,8 +94,28 @@ public class BasicTest : MonoBehaviour
 
     void OnCollisionExit(Collision other){
 
+
+
+        //if (other.gameObject.CompareTag("Climb") && coll.gameObject.CompareTag("Hand"))
+        //{
+        //if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.Any)){
+        if (rightHandler.contact)
+        {
+            GetComponent<Rigidbody>().velocity = rightHandler.pushVel;
+            rightHandler.pushVel = Vector3.zero;
+
+        }
+        else if (leftHandler.contact)
+            {
+                GetComponent<Rigidbody>().velocity = leftHandler.pushVel;
+                leftHandler.pushVel = Vector3.zero;
+            }
+        //}
+        //}
         rightHold = false;
-        GetComponent<Rigidbody>().isKinematic = false;
+
+        //Collider coll = other.contacts[0].thisCollider;
+
         rightHandler.hold = false;
 
         rightHandler.contact = false;
@@ -100,5 +124,7 @@ public class BasicTest : MonoBehaviour
         leftHandler.hold = false;
 
         leftHandler.contact = false;
+
+
     }
 }
