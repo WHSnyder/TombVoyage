@@ -760,7 +760,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: -7.2, y: 23.7, z: -14.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2497,15 +2497,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6437285512352284248, guid: 6d22c7fe50736467ea82e0bdce8a6ca2,
-        type: 3}
-      propertyPath: m_Name
-      value: ship_test
-      objectReference: {fileID: 0}
     - target: {fileID: 634344838677869928, guid: 6d22c7fe50736467ea82e0bdce8a6ca2,
         type: 3}
       propertyPath: m_TagString
       value: Chair
+      objectReference: {fileID: 0}
+    - target: {fileID: 6437285512352284248, guid: 6d22c7fe50736467ea82e0bdce8a6ca2,
+        type: 3}
+      propertyPath: m_Name
+      value: ship_test
       objectReference: {fileID: 0}
     - target: {fileID: 8002488386391657547, guid: 6d22c7fe50736467ea82e0bdce8a6ca2,
         type: 3}

@@ -394,27 +394,27 @@ PrefabInstance:
     - target: {fileID: 3294604760032608297, guid: b0128cdc9c3e66141a1bbe5fff5aea40,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 11.96
+      value: 15.75
       objectReference: {fileID: 0}
     - target: {fileID: 3294604760032608297, guid: b0128cdc9c3e66141a1bbe5fff5aea40,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3294604760032608297, guid: b0128cdc9c3e66141a1bbe5fff5aea40,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3294604760032608297, guid: b0128cdc9c3e66141a1bbe5fff5aea40,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3294604760032608297, guid: b0128cdc9c3e66141a1bbe5fff5aea40,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3294604760032608297, guid: b0128cdc9c3e66141a1bbe5fff5aea40,
         type: 3}
@@ -429,7 +429,7 @@ PrefabInstance:
     - target: {fileID: 3294604760032608297, guid: b0128cdc9c3e66141a1bbe5fff5aea40,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 3294604760032608297, guid: b0128cdc9c3e66141a1bbe5fff5aea40,
         type: 3}
@@ -1705,13 +1705,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8805986870515353340}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: -0, y: -0.0399, z: -0.0028}
   m_LocalScale: {x: 3, y: 1, z: 3}
   m_Children: []
   m_Father: {fileID: 2827723855059922246}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!33 &4944118987578068778
 MeshFilter:
   m_ObjectHideFlags: 0

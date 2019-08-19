@@ -28,10 +28,8 @@ namespace Valve.VR
         private Vector3 handForce;
 
         override
-        protected void Start()
-        {
-            if (poseAction == null)
-            {
+        protected void Start(){
+            if (poseAction == null){
                 Debug.LogError("<b>[SteamVR]</b> No pose action set for this component");
                 return;
             }
@@ -44,8 +42,7 @@ namespace Valve.VR
             playerRig = player.GetComponent<Rigidbody>();
         }
 
-        private void SteamVR_Behaviour_Pose_OnUpdate(SteamVR_Action_Pose fromAction, SteamVR_Input_Sources fromSource)
-        {
+        private void SteamVR_Behaviour_Pose_OnUpdate(SteamVR_Action_Pose fromAction, SteamVR_Input_Sources fromSource){
             UpdateHistoryBuffer();
 
             UpdateTransform();
@@ -90,7 +87,6 @@ namespace Valve.VR
 
                 lastPos = transform.position;
             }
-            
         }
     }
 }
