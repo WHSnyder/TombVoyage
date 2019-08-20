@@ -18,20 +18,24 @@ namespace Valve.VR
         public bool contact = false;
         public Vector3 contactNormal;
 
+        Vector3 lastPlayer = Vector3.zero;
+        
 
         public bool hold = false;
 
         public Transform player;
         private Rigidbody playerRig;
 
+        public Vector3 pushVel;
+
         private Vector3 lastPos;
+        private Vector3 lastPosLocal;
+
         private Vector3 handForce;
 
         override
-        protected void Start()
-        {
-            if (poseAction == null)
-            {
+        protected void Start(){
+            if (poseAction == null){
                 Debug.LogError("<b>[SteamVR]</b> No pose action set for this component");
                 return;
             }
@@ -44,8 +48,7 @@ namespace Valve.VR
             playerRig = player.GetComponent<Rigidbody>();
         }
 
-        private void SteamVR_Behaviour_Pose_OnUpdate(SteamVR_Action_Pose fromAction, SteamVR_Input_Sources fromSource)
-        {
+        private void SteamVR_Behaviour_Pose_OnUpdate(SteamVR_Action_Pose fromAction, SteamVR_Input_Sources fromSource){
             UpdateHistoryBuffer();
 
             UpdateTransform();
@@ -73,24 +76,33 @@ namespace Valve.VR
                 transform.localPosition = poseAction[inputSource].localPosition;
                 transform.localRotation = poseAction[inputSource].localRotation;
 
-                Vector3 diff = Vector3.Normalize( transform.position - lastPos );
+                Vector3 diff = (transform.localPosition - lastPosLocal);
                 float dot = Vector3.Dot(diff, contactNormal);
+                float normedDot = Vector3.Dot(Vector3.Normalize(diff), contactNormal);
 
-                Debug.Log("Pushing off with dot of: " + dot);
+                Debug.Log("Pushing off with dot of: " + normedDot);
+                Debug.Log("Diff vector: " + diff.ToString());// + " normal vector: " + contactNormal.ToString() );
 
-                if (dot < -0.7){
-                    player.GetComponent<Rigidbody>().velocity = contactNormal;
+                Vector3 playerDiff = player.transform.position - lastPlayer;
+
+                if (normedDot < -0.7){
+                    pushVel = pushVel + 2 * playerDiff;
+                    player.GetComponent<Rigidbody>().velocity = pushVel;
+                    Debug.Log("push vel: " + pushVel);
                 }
 
-                lastPos = transform.position;              
+                lastPos = transform.position;
+                lastPosLocal = transform.localPosition;
             }
             else {
                 transform.localPosition = poseAction[inputSource].localPosition;
                 transform.localRotation = poseAction[inputSource].localRotation;
 
                 lastPos = transform.position;
+                lastPosLocal = transform.localPosition;
             }
-            
+
+            lastPlayer = player.transform.position;
         }
     }
 }

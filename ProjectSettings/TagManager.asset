@@ -11,6 +11,7 @@ TagManager:
   - Joy
   - Chair
   - Climb
+  - GuardRocks
   layers:
   - Default
   - TransparentFX

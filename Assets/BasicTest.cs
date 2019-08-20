@@ -14,6 +14,8 @@ public class BasicTest : MonoBehaviour
 
     Vector3 rightPos = Vector3.zero;
 
+    Vector3 lastPos = Vector3.zero;
+
 
     bool holding = false;
     bool apply = false;
@@ -56,12 +58,18 @@ public class BasicTest : MonoBehaviour
         {
             //GetComponent<Rigidbody>().isKinematic = false;
         }
+
+        lastPos = transform.position;
+
+        //Debug.Log("Player vel: " + GetComponent<Rigidbody>().velocity);
     }
 
-    void OnCollisionStay(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
         Collider coll = collision.contacts[0].thisCollider;
         Collider other = collision.contacts[0].otherCollider;
+
+        Debug.Log(coll.gameObject.name + " collided at normal: " + collision.GetContact(0).normal.ToString());
         
         if (other.gameObject.CompareTag("Climb") && coll.gameObject.CompareTag("Hand")){
             //if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.Any)){
@@ -90,15 +98,30 @@ public class BasicTest : MonoBehaviour
 
     void OnCollisionExit(Collision other){
 
-        rightHold = false;
-        GetComponent<Rigidbody>().isKinematic = false;
-        rightHandler.hold = false;
+        //if (other.gameObject.CompareTag("Climb") && coll.gameObject.CompareTag("Hand"))
+        //{
+        //if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.Any)){
+        if (rightHandler.contact){
+            //GetComponent<Rigidbody>().velocity = rightHandler.pushVel;
+            rightHandler.pushVel = Vector3.zero;
 
+            Debug.Log("right hand exit...");
+
+        }
+        else if (leftHandler.contact){
+           // GetComponent<Rigidbody>().velocity = leftHandler.pushVel;
+            leftHandler.pushVel = Vector3.zero;
+
+            Debug.Log("right hand exit...");
+        }
+        //}
+        //}
+        rightHold = false;
+        rightHandler.hold = false;
         rightHandler.contact = false;
 
         leftHold = false;
         leftHandler.hold = false;
-
         leftHandler.contact = false;
     }
 }
