@@ -48,7 +48,6 @@ public class LeftHand : MonoBehaviour
 
     // Update is called once per frame
     void Update(){
-        return;
 
         pointer = transform.Find("LeftRenderModel(Clone)/vr_glove_left(Clone)/vr_glove_model/Root/wrist_r/finger_index_meta_r/finger_index_0_r/finger_index_1_r/");
 
@@ -94,8 +93,10 @@ public class LeftHand : MonoBehaviour
 
                 if (pulling){
 
-                    Vector3 vel = (transform.position - lastPosition) / Time.deltaTime;
-                    roidrb.velocity = 5 * vel;
+                    Vector3 dest = transform.position + 100 * reach.transform.forward;
+
+
+                    roidrb.velocity = .5f * (dest - roidrb.gameObject.transform.position);
                     roidrb = null;
                 }
                 pulling = false;
@@ -162,7 +163,6 @@ public class LeftHand : MonoBehaviour
 
     private void Awake()
     {
-        return;
         reach = GameObject.Find("reach");
         reachHandle = reach.GetComponent<Reach>();
 
