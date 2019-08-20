@@ -18,6 +18,8 @@ namespace Valve.VR
         public bool contact = false;
         public Vector3 contactNormal;
 
+        Vector3 lastPlayer = Vector3.zero;
+        
 
         public bool hold = false;
 
@@ -81,10 +83,11 @@ namespace Valve.VR
                 Debug.Log("Pushing off with dot of: " + normedDot);
                 Debug.Log("Diff vector: " + diff.ToString());// + " normal vector: " + contactNormal.ToString() );
 
+                Vector3 playerDiff = player.transform.position - lastPlayer;
 
-                if (normedDot < -0.5){
-                    pushVel =  pushVel + 10.0f* dot * contactNormal;
-                    player.GetComponent<Rigidbody>().velocity += pushVel;
+                if (normedDot < -0.7){
+                    pushVel = pushVel + 2 * playerDiff;
+                    player.GetComponent<Rigidbody>().velocity = pushVel;
                     Debug.Log("push vel: " + pushVel);
                 }
 
@@ -98,6 +101,8 @@ namespace Valve.VR
                 lastPos = transform.position;
                 lastPosLocal = transform.localPosition;
             }
+
+            lastPlayer = player.transform.position;
         }
     }
 }
