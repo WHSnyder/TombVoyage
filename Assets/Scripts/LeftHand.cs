@@ -37,6 +37,8 @@ public class LeftHand : MonoBehaviour
     private bool driving = false;
     private bool pulling = false;
 
+    public Transform vrCam;
+
 
     private GameObject reach;
     private Reach reachHandle;
@@ -90,39 +92,49 @@ public class LeftHand : MonoBehaviour
         }
         else {
             if (!pull.GetState(pose.inputSource)){
-
                 if (pulling){
 
-                    Vector3 dest = transform.position + 100 * reach.transform.forward;
+                    /* Vector3 dest = transform.position + 100 * reach.transform.forward;
+
+                     roidrb.velocity = .5f * (dest - roidrb.gameObject.transform.position);*/
+
+                    Vector3 handVel, nada;
+
+                    pose.GetEstimatedPeakVelocities(out handVel, out nada);
+                    RaycastHit hit;
+
+                    if (Physics.Raycast(vrCam.position, vrCam.forward, out hit, 1000, 1 << 8))
+                    {
+                        Debug.Log("Object hit was: " + hit.collider.gameObject.name);
+                        roidrb.velocity =  15 * Vector3.Normalize(hit.point - roidrb.transform.position);
+                    }
+                    else
+                    {
+                        Debug.Log("no hit found....");
+                        roidrb.velocity = handVel;
+                    }
 
 
-                    roidrb.velocity = .5f * (dest - roidrb.gameObject.transform.position);
+
+
                     roidrb = null;
                 }
                 pulling = false;
             }
         }
 
-
-
-
-
-
-
-
-
         if (pulling && pointer){
 
             dif = this.transform.position - asteroid.transform.position;
 
+            
+
             if (grip.GetState(pose.inputSource)){
-
-                roidrb.velocity = Vector3.Normalize(dif) * 10;
+                roidrb.velocity = 8.0f * Vector3.Normalize(dif);
             }
-
             else {
 
-                roidrb.velocity = Vector3.Normalize(dif);
+                //
             }
         }
 

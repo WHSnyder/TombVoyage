@@ -12,6 +12,7 @@ TagManager:
   - Chair
   - Climb
   - GuardRocks
+  - Roid
   layers:
   - Default
   - TransparentFX
