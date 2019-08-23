@@ -6,6 +6,7 @@ using Valve.VR.InteractionSystem;
 
 public class LeftHand : MonoBehaviour
 {
+    public SteamVR_Action_Boolean leftSelect = null;
     public SteamVR_Action_Boolean grab = null;
     public SteamVR_Action_Boolean pull = null;
     private SteamVR_Behaviour_Pose pose = null;
@@ -16,6 +17,8 @@ public class LeftHand : MonoBehaviour
     private GameObject player = null;
     private GameObject ship = null;
     private GameObject gun = null;
+
+    public GameObject rightHand;
 
     private GameObject asteroid = null;
     private Rigidbody roidrb = null;
@@ -69,6 +72,11 @@ public class LeftHand : MonoBehaviour
             driving = false;
         }
 
+        if (leftSelect.GetState(pose.inputSource))
+        {
+            changeToFree();
+        }
+
 
         Vector3 dif = Vector3.zero;
         Vector3 towards = pointer.right * -1; 
@@ -103,16 +111,16 @@ public class LeftHand : MonoBehaviour
                     pose.GetEstimatedPeakVelocities(out handVel, out nada);
                     RaycastHit hit;
 
-                    if (Physics.Raycast(vrCam.position, vrCam.forward, out hit, 1000, 1 << 8))
-                    {
-                        Debug.Log("Object hit was: " + hit.collider.gameObject.name);
-                        roidrb.velocity =  15 * Vector3.Normalize(hit.point - roidrb.transform.position);
-                    }
+                    //if (Physics.Raycast(vrCam.position, vrCam.forward, out hit, 1000, 1 << 8))
+                    //{
+                        Debug.Log("Hand Speed: " + Vector3.Magnitude( handVel ));
+                        roidrb.velocity = Vector3.Magnitude( handVel ) * 10 * Vector3.Normalize(reach.GetComponent<Reach>().collided.transform.position - roidrb.transform.position);
+                   /* }
                     else
                     {
                         Debug.Log("no hit found....");
                         roidrb.velocity = handVel;
-                    }
+                    }*/
 
 
 
@@ -190,6 +198,7 @@ public class LeftHand : MonoBehaviour
 
         pointer = transform.Find("LeftRenderModel(Clone)/vr_glove_left(Clone)/vr_glove_model/Root/wrist_r/finger_inex_meta_r/finger_index_0_r/finger_index_1_r/");
 
+
     }
 
 
@@ -256,6 +265,26 @@ public class LeftHand : MonoBehaviour
         reachLinked = true;
 
         reach.transform.SetParent(pointer);
-        reach.GetComponent<MeshRenderer>().enabled = false;
+        //reach.GetComponent<MeshRenderer>().enabled = false;
+    }
+
+
+    void changeToFree()
+    {
+        GetComponent<SteamVR_Will>().enabled = true;
+        GetComponent<SteamVR_Behaviour_Pose>().enabled = false;
+        GetComponent<Rigidbody>().isKinematic = true;
+
+        rightHand.GetComponent<SteamVR_Will>().enabled = true;
+        rightHand.GetComponent<SteamVR_Behaviour_Pose>().enabled = false;
+        rightHand.GetComponent<Rigidbody>().isKinematic = true;
+
+        player.transform.SetParent(null);
+
+        player.GetComponent<BoxCollider>().enabled = true;
+        player.GetComponent<Rigidbody>().isKinematic = false;
+        player.GetComponent<BasicTest>().enabled = true;
+
+        player.GetComponent<Rigidbody>().velocity = 2 * ship.GetComponent<Rigidbody>().velocity;
     }
 }

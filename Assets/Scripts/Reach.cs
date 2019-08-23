@@ -13,6 +13,6 @@ public class Reach : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        collided = null;
+        //collided = null;
     }
 }
