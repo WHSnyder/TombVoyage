@@ -13,6 +13,7 @@ TagManager:
   - Climb
   - GuardRocks
   - Roid
+  - Throttle
   layers:
   - Default
   - TransparentFX

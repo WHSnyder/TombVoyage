@@ -8,6 +8,7 @@ public class ShipController : MonoBehaviour
     Rigidbody rb;
 
     GameObject joystick = null;
+    GameObject throttle = null;
 
     Vector3 joy_rest = Vector3.up;
     Vector3 joy_curr = Vector3.zero;
@@ -20,59 +21,35 @@ public class ShipController : MonoBehaviour
     float side_vel, up_vel;
 
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
+    void Start(){
         rb = GetComponent<Rigidbody>();
-        
     }
 
-    void Awake()
-    {
-        joystick = GameObject.Find("JoyStick");
+    void Awake(){
+        joystick = GameObject.Find("/ship/StickRoot/JoyStick");
+        throttle = GameObject.Find("/ship/ThrottleRoot/Throttle");
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        //rot = Quaternion.LookRotation(-1*joystick.transform.right, joystick.transform.up);
-        //print("Joyright: " + facepalm*joystick.transform.right);
-        //this.transform.rotation = rot;
-        //print(rot);
+    void Update(){
 
-        joy_curr = joystick.transform.up;
+        joy_curr = joystick.transform.forward;
 
-        float side_bet = Vector3.Angle(this.transform.forward, joy_curr);
+        float side_bet = Vector3.Angle(-1 * this.transform.up, joy_curr);
         float up_bet = Vector3.Angle(this.transform.right, joy_curr);
-        //print(between);
-
-        //print("Up angle: " + up_bet + " Side angle: " + side_bet);
 
         side_vel = Mathf.Deg2Rad * (90 - side_bet);
         up_vel = Mathf.Deg2Rad * (90 - up_bet); 
 
         ang_vel = new Vector3(side_vel, 0, up_vel);
-        //print(vel * Mathf.Rad2Deg);
-
     }
 
-    private void FixedUpdate()
-    {
-
+    private void FixedUpdate(){
 
         rb.centerOfMass = Vector3.zero;
 
-        rb.angularVelocity = rb.transform.right*side_vel + rb.transform.forward*-1*up_vel;
-
-        //print("Rot speed: " + rb.angularVelocity.ToString());
+        rb.angularVelocity = rb.transform.right*side_vel + rb.transform.up*up_vel;
 
         rb.velocity = transform.right * -5;
-    }
-
-
-    public void fire(Vector3 target)
-    {
-
     }
 }

@@ -17,6 +17,7 @@ public class LeftHand : MonoBehaviour
     private GameObject player = null;
     private GameObject ship = null;
     private GameObject gun = null;
+    private GameObject throttle = null;
 
     public GameObject rightHand;
 
@@ -39,6 +40,7 @@ public class LeftHand : MonoBehaviour
     private bool holding = false;
     private bool driving = false;
     private bool pulling = false;
+    private bool flooring = false;
 
     public Transform vrCam;
 
@@ -63,13 +65,14 @@ public class LeftHand : MonoBehaviour
 
         if (!reachLinked && pointer){
             print("reaching");
-            linkReach();
+            //linkReach();
         }
 
         if (grab.GetStateUp(pose.inputSource)){
             Drop();
             holding = false;
             driving = false;
+            flooring = false;
         }
 
         if (leftSelect.GetState(pose.inputSource))
@@ -102,29 +105,13 @@ public class LeftHand : MonoBehaviour
             if (!pull.GetState(pose.inputSource)){
                 if (pulling){
 
-                    /* Vector3 dest = transform.position + 100 * reach.transform.forward;
-
-                     roidrb.velocity = .5f * (dest - roidrb.gameObject.transform.position);*/
-
                     Vector3 handVel, nada;
 
                     pose.GetEstimatedPeakVelocities(out handVel, out nada);
-                    RaycastHit hit;
 
-                    //if (Physics.Raycast(vrCam.position, vrCam.forward, out hit, 1000, 1 << 8))
-                    //{
-                        Debug.Log("Hand Speed: " + Vector3.Magnitude( handVel ));
-                        roidrb.velocity = Vector3.Magnitude( handVel ) * 10 * Vector3.Normalize(reach.GetComponent<Reach>().collided.transform.position - roidrb.transform.position);
-                   /* }
-                    else
-                    {
-                        Debug.Log("no hit found....");
-                        roidrb.velocity = handVel;
-                    }*/
+                    Debug.Log("Hand Speed: " + Vector3.Magnitude( handVel ));
 
-
-
-
+                    //roidrb.velocity = Vector3.Magnitude( handVel ) * 10 * Vector3.Normalize(reach.GetComponent<Reach>().collided.transform.position - roidrb.transform.position);
                     roidrb = null;
                 }
                 pulling = false;
@@ -135,8 +122,6 @@ public class LeftHand : MonoBehaviour
 
             dif = this.transform.position - asteroid.transform.position;
 
-            
-
             if (grip.GetState(pose.inputSource)){
                 roidrb.velocity = 8.0f * Vector3.Normalize(dif);
             }
@@ -146,40 +131,62 @@ public class LeftHand : MonoBehaviour
             }
         }
 
-
-
-
-
+        /*
+         
+         Steering Logic
+         
+         */
         if (driving){
 
             Vector3 difference = joystick.transform.position - transform.position;
 
             if (Vector3.Magnitude(difference) < 1){
 
-                flip = !flip;
-
-                if (flip)
-                {
-                    facepalm = facepalm * -1;
-                }
-
-                Quaternion rot = Quaternion.LookRotation(Vector3.Cross(Vector3.forward, difference), -1 * difference);
-                //print("Joyright: " + facepalm*joystick.transform.right);
-
+                Quaternion rot = Quaternion.LookRotation(-1 * difference, Vector3.Cross(Vector3.right, difference));
                 joystick.transform.rotation = rot;
+            }
+            else {
+                driving = false;
+            }
+        }
 
-                //print(rot.ToString());
 
+
+        /*
+         
+         Accel Logic
+         
+         */
+
+
+        if (flooring){
+
+            Vector3 difference = -1 * ( throttle.transform.position - transform.position );
+
+            difference = throttle.transform.worldToLocalMatrix * difference;
+
+            if (Vector3.Magnitude(difference) < 1) {
+
+                float yrot = throttle.transform.localRotation.eulerAngles.y;
+
+                if (yrot > -40 && yrot < 60) {
+                    Vector3 lookAt = throttle.transform.localToWorldMatrix * new Vector3(difference.x, 0, difference.z);//Vector3.Project(-1 * difference, throttle.transform.forward); 
+
+                    Quaternion rot = Quaternion.LookRotation(lookAt, throttle.transform.up);
+                    throttle.transform.rotation = rot;
+                }
             }
             else{
-                driving = false;
+                flooring = false;
             }
         }
 
         lastPosition = transform.position;
     }
 
-    
+
+
+
 
     private void Awake()
     {
@@ -191,10 +198,11 @@ public class LeftHand : MonoBehaviour
 
         pointerSphere = GameObject.Find("PR_Sphere");
         joystick = GameObject.Find("JoyStick");
+        throttle = GameObject.Find("Throttle");
         player = GameObject.Find("Player");
-        ship = GameObject.Find("ship_test");
+        ship = GameObject.Find("ship");
 
-        gun = GameObject.Find("gun");
+        //gun = GameObject.Find("gun");
 
         pointer = transform.Find("LeftRenderModel(Clone)/vr_glove_left(Clone)/vr_glove_model/Root/wrist_r/finger_inex_meta_r/finger_index_0_r/finger_index_1_r/");
 
@@ -221,6 +229,14 @@ public class LeftHand : MonoBehaviour
             if (grab.GetState(pose.inputSource))
             {
                 driving = true;
+            }
+        }
+
+        else if (!flooring && other.gameObject.CompareTag("Throttle"))
+        {
+            if (grab.GetState(pose.inputSource))
+            {
+                flooring = true;
             }
         }
     }

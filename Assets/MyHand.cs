@@ -11,7 +11,7 @@ public class MyHand : MonoBehaviour
 
     private GameObject pointerSphere = null;
     private GameObject joystick = null;
-    private GameObject player = null;
+    public GameObject player = null;
     private GameObject ship = null;
 
     private FixedJoint joint = null;
@@ -46,64 +46,54 @@ public class MyHand : MonoBehaviour
 
                 pointerSphere.SetActive(coll != null); 
                 
-                if (coll != null && SteamVR_Input.GetState("Select", SteamVR_Input_Sources.RightHand))
-                {
-                    
-                    player.transform.position = coll.transform.position - ship.transform.up;
-                    player.transform.rotation = Quaternion.LookRotation(-1 * coll.transform.right, ship.transform.up);
-                    
+                if (coll != null && SteamVR_Input.GetState("Select", SteamVR_Input_Sources.RightHand)){
+
+                   // player.transform.pos = new Vector3(-0.2534811f, 0.5612581f, 0.5571114f); // = coll.transform.position; // + (ship.transform.right + ship.transform.up);
+                    player.transform.rotation = Quaternion.LookRotation(-1 * coll.transform.right, ship.transform.forward);
                 }
             }
         }
-        else
-        {
+        else { 
             pointerSphere.SetActive(false);
         }
 
 
-
-        if (driving)
-        {
+        /*
+         
+         JoyStick control... perhaps checkout upgrading to circular drive with to axes..
+         
+         */
+        if (driving) { 
             Vector3 difference = joystick.transform.position - transform.position;
 
+            if (Vector3.Magnitude(difference) < 1){
 
-            if (Vector3.Magnitude(difference) < 1)
-            {
-                
-                flip = !flip;
+                /*flip = !flip;
 
-                if (flip)
-                {
+                if (flip) { 
                     facepalm = facepalm * -1;
-                }
+                }*/
 
-                Quaternion rot = Quaternion.LookRotation(Vector3.Cross(Vector3.forward, difference), -1*difference);
-                //print("Joyright: " + facepalm*joystick.transform.right);
-                
+                // Quaternion rot = Quaternion.LookRotation(Vector3.Cross(Vector3.forward, difference), -1*difference);
+
+                Quaternion rot = Quaternion.LookRotation(-1 * difference, Vector3.Cross(Vector3.right, difference));   
                 joystick.transform.rotation = rot;
-
-                //print(rot.ToString());
-
             }
-            else
-            {
+            else{
                 driving = false;
             }
         }
     }
 
-    private GameObject updatePointer()
-    {
+
+
+    private GameObject updatePointer(){
         RaycastHit hit;
         
-        if (Physics.Raycast(transform.position, transform.forward + (-1 * transform.up), out hit,Mathf.Infinity, Physics.DefaultRaycastLayers))
-        {
+        if (Physics.Raycast(transform.position, transform.forward + (-1 * transform.up), out hit,Mathf.Infinity, Physics.DefaultRaycastLayers)){
             pointerSphere.transform.position = hit.point;
-            //print("Cast success");
             return hit.collider.gameObject;
         }
-        
-        //print("Cast failed");
         return null;
     }
 
@@ -114,9 +104,9 @@ public class MyHand : MonoBehaviour
         joint = GetComponent<FixedJoint>();
 
         pointerSphere = GameObject.Find("PR_Sphere");
-        joystick = GameObject.Find("JoyStick");
-        player = GameObject.Find("Player");
-        ship = GameObject.Find("ship_test");
+        joystick = GameObject.Find("/ship/StickRoot/JoyStick");
+        //player = GameObject.Find("Player");
+        ship = GameObject.Find("ship");
     }
 
     
