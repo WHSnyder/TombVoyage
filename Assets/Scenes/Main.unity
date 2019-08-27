@@ -618,6 +618,18 @@ MonoBehaviour:
   hold: 0
   player: {fileID: 0}
   pushVel: {x: 0, y: 0, z: 0}
+--- !u!114 &1173203586 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3183424789936222829, guid: b0128cdc9c3e66141a1bbe5fff5aea40,
+    type: 3}
+  m_PrefabInstance: {fileID: 3294604759869384764}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1173203581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5fb0ca93b55ef4b8d54b512b103341, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1520574683
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -653,7 +665,7 @@ PrefabInstance:
     - target: {fileID: -5253880326144386033, guid: 4ea03c2c6fd4d214ba8b86658f276574,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -4528942210650236077, guid: 4ea03c2c6fd4d214ba8b86658f276574,
         type: 3}
@@ -723,37 +735,37 @@ PrefabInstance:
     - target: {fileID: 288895975399775406, guid: 4ea03c2c6fd4d214ba8b86658f276574,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.053360946
+      value: -1.1439481e-10
       objectReference: {fileID: 0}
     - target: {fileID: 288895975399775406, guid: 4ea03c2c6fd4d214ba8b86658f276574,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.0011326562
+      value: -0.35720944
       objectReference: {fileID: 0}
     - target: {fileID: 288895975399775406, guid: 4ea03c2c6fd4d214ba8b86658f276574,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.021191288
+      value: 0.000000014900722
       objectReference: {fileID: 0}
     - target: {fileID: 288895975399775406, guid: 4ea03c2c6fd4d214ba8b86658f276574,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9983498
+      value: 0.93402433
       objectReference: {fileID: 0}
     - target: {fileID: 288895975399775406, guid: 4ea03c2c6fd4d214ba8b86658f276574,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -41.858
       objectReference: {fileID: 0}
     - target: {fileID: 288895975399775406, guid: 4ea03c2c6fd4d214ba8b86658f276574,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -6.1190004
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 288895975399775406, guid: 4ea03c2c6fd4d214ba8b86658f276574,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -2.4320002
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9151305354274270114, guid: 4ea03c2c6fd4d214ba8b86658f276574,
         type: 3}
@@ -793,7 +805,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1520574685}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f32883eed859804dbb0c5fedac91496, type: 3}
   m_Name: 
@@ -801,8 +813,8 @@ MonoBehaviour:
   axisOfRotation: 1
   childCollider: {fileID: 0}
   linearMapping: {fileID: 0}
-  hoverLock: 0
-  limited: 1
+  hoverLock: 1
+  limited: 0
   frozenDistanceMinMaxThreshold: {x: 0.1, y: 0.1}
   onFrozenDistanceThreshold:
     m_PersistentCalls:
@@ -817,13 +829,13 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   maxAngle: 65
-  freezeOnMax: 1
+  freezeOnMax: 0
   onMaxAngle:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  forceStart: 1
+  forceStart: 0
   startAngle: 0
   rotateGameObject: 1
   debugPath: 0
@@ -837,18 +849,18 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1520574685}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   activateActionSetOnAttach:
-    actionSetPath: 
-  hideHandOnAttach: 0
+    actionSetPath: /actions/default
+  hideHandOnAttach: 1
   hideSkeletonOnAttach: 0
   hideControllerOnAttach: 1
   handAnimationOnPickup: 0
-  setRangeOfMotionOnPickup: -1
+  setRangeOfMotionOnPickup: 0
   useHandObjectAttachmentPoint: 1
   attachEaseIn: 0
   snapAttachEaseInCurve:
@@ -889,11 +901,11 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1520574685}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.00024819575, y: 0.00070583145, z: 0.0024787572}
-  m_Center: {x: -0.000039668415, y: 0.00002486417, z: 0.0012292414}
+  m_Size: {x: 0.00024819575, y: 0.0007058314, z: 0.0024787567}
+  m_Center: {x: -0.000039787625, y: 0.000024856708, z: 0.0012292411}
 --- !u!65 &1520574691
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6305,6 +6317,11 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3294604759513200603, guid: b0128cdc9c3e66141a1bbe5fff5aea40,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3294604760032722289, guid: b0128cdc9c3e66141a1bbe5fff5aea40,
         type: 3}
       propertyPath: m_LocalRotation.z
@@ -6330,7 +6347,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 90
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 3294604760042594867, guid: b0128cdc9c3e66141a1bbe5fff5aea40,
+        type: 3}
+      propertyPath: trackedObject
+      value: 
+      objectReference: {fileID: 1173203586}
+    m_RemovedComponents:
+    - {fileID: 3294604759513200596, guid: b0128cdc9c3e66141a1bbe5fff5aea40, type: 3}
+    - {fileID: 3294604759513200597, guid: b0128cdc9c3e66141a1bbe5fff5aea40, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b0128cdc9c3e66141a1bbe5fff5aea40, type: 3}
 --- !u!1 &3294604759869384765 stripped
 GameObject:
@@ -6379,16 +6403,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c376f67d530764b45a1d16175cbaf8af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftHand: {fileID: 1173203581}
-  rightHand: {fileID: 268645663}
-  leftHandler: {fileID: 0}
-  rightHandler: {fileID: 0}
-  rightPos: {x: 0, y: 0, z: 0}
-  lastPos: {x: 0, y: 0, z: 0}
-  holding: 0
-  apply: 0
-  rightHold: 0
-  leftHold: 0
 --- !u!33 &3428809189371378499
 MeshFilter:
   m_ObjectHideFlags: 0

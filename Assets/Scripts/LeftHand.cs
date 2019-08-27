@@ -299,7 +299,7 @@ public class LeftHand : MonoBehaviour
 
         player.GetComponent<BoxCollider>().enabled = true;
         player.GetComponent<Rigidbody>().isKinematic = false;
-        player.GetComponent<BasicTest>().enabled = true;
+        player.GetComponent<ZeroGravHand>().enabled = true;
 
         player.GetComponent<Rigidbody>().velocity = 2 * ship.GetComponent<Rigidbody>().velocity;
     }

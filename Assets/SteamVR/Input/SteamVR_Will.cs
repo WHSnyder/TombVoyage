@@ -19,7 +19,8 @@ namespace Valve.VR
         public Vector3 contactNormal;
 
         Vector3 lastPlayer = Vector3.zero;
-        
+
+        public Vector3 velAccum  = Vector3.zero;
 
         public bool hold = false;
 
@@ -76,19 +77,23 @@ namespace Valve.VR
                 transform.localPosition = poseAction[inputSource].localPosition;
                 transform.localRotation = poseAction[inputSource].localRotation;
 
-                Vector3 diff = (transform.localPosition - lastPosLocal);
-                float dot = Vector3.Dot(diff, contactNormal);
+                Vector3 diff = (transform.position - lastPos);
                 float normedDot = Vector3.Dot(Vector3.Normalize(diff), contactNormal);
 
-                Debug.Log("Pushing off with dot of: " + normedDot);
-                Debug.Log("Diff vector: " + diff.ToString());// + " normal vector: " + contactNormal.ToString() );
+               // Debug.Log("Pushing off with dot of: " + normedDot);
+               // Debug.Log("Diff vector: " + diff.ToString());// + " normal vector: " + contactNormal.ToString() );
 
-                Vector3 playerDiff = player.transform.position - lastPlayer;
+                Vector3 playerDiff = this.transform.position - lastPlayer; //player.transform.position - lastPlayer;
 
-                if (normedDot < -0.7){
-                    pushVel = pushVel + 2 * playerDiff;
-                    player.GetComponent<Rigidbody>().velocity = pushVel;
-                    Debug.Log("push vel: " + pushVel);
+                if (normedDot < 0.0){
+                    //pushVel =  playerDiff/Time.deltaTime;
+                    if (Vector3.Magnitude(playerDiff) > .1)
+                    {
+
+                        velAccum = playerDiff;
+                    }
+
+                    Debug.Log( "velcoity accumulated: " + velAccum);
                 }
 
                 lastPos = transform.position;

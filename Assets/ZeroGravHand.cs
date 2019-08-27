@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 
-public class BasicTest : MonoBehaviour
+public class ZeroGravHand : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject leftHand, rightHand;
 
     public SteamVR_Will leftHandler;
     public SteamVR_Will rightHandler;
+
+    private Vector3 delayedVel = Vector3.zero;
 
 
     Vector3 rightPos = Vector3.zero;
@@ -34,7 +36,7 @@ public class BasicTest : MonoBehaviour
         leftHandler = leftHand.GetComponent<SteamVR_Will>();
         rightHandler = rightHand.GetComponent<SteamVR_Will>();
 
-        GetComponent<Rigidbody>().velocity = 1 * transform.forward;
+        GetComponent<Rigidbody>().velocity = .5f * transform.forward;
 
     }
 
@@ -69,8 +71,8 @@ public class BasicTest : MonoBehaviour
         Collider coll = collision.contacts[0].thisCollider;
         Collider other = collision.contacts[0].otherCollider;
 
-        Debug.Log(coll.gameObject.name + " collided at normal: " + collision.GetContact(0).normal.ToString());
-        
+        // Debug.Log(coll.gameObject.name + " collided at normal: " + collision.GetContact(0).normal.ToString());
+        Debug.Log("Beginning coll with: " + other.gameObject.name);
         if (other.gameObject.CompareTag("Climb") && coll.gameObject.CompareTag("Hand")){
             //if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.Any)){
             if (coll.gameObject.name[0] == 'R'){
@@ -96,32 +98,49 @@ public class BasicTest : MonoBehaviour
     }
 
 
-    void OnCollisionExit(Collision other){
+    void OnCollisionExit(Collision collision){
+
+        //collision.GetContacts;
+
+       // Collider coll = collision.contacts[0].thisCollider;
+       // Collider other = collision.contacts[0].otherCollider;
+
+        Debug.Log("Ending collision with: " + collision.collider.gameObject.name);
 
         //if (other.gameObject.CompareTag("Climb") && coll.gameObject.CompareTag("Hand"))
         //{
-        //if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.Any)){
-        if (rightHandler.contact){
-            //GetComponent<Rigidbody>().velocity = rightHandler.pushVel;
-            rightHandler.pushVel = Vector3.zero;
+            //if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.Any)){
+            if (rightHandler.contact)
+            {
+               delayedVel = rightHandler.velAccum;
+                //rightHandler.pushVel = Vector3.zero;
 
-            Debug.Log("right hand exit...");
+                Debug.Log("right hand exit with vel of: " + ( rightHandler.velAccum ) );
+                rightHold = false;
+                rightHandler.hold = false;
+                rightHandler.contact = false;
+            }
+            else if (leftHandler.contact)
+            {
+                delayedVel = leftHandler.velAccum;
+                //leftHandler.pushVel = Vector3.zero;
 
-        }
-        else if (leftHandler.contact){
-           // GetComponent<Rigidbody>().velocity = leftHandler.pushVel;
-            leftHandler.pushVel = Vector3.zero;
-
-            Debug.Log("right hand exit...");
-        }
+                Debug.Log("left hand exit with vel of: " + (leftHandler.velAccum));
+                leftHold = false;
+                leftHandler.hold = false;
+                leftHandler.contact = false;
+            }
+       // }
         //}
-        //}
-        rightHold = false;
-        rightHandler.hold = false;
-        rightHandler.contact = false;
+        
+        
+       
 
-        leftHold = false;
-        leftHandler.hold = false;
-        leftHandler.contact = false;
+    }
+
+    private void FixedUpdate()
+    {
+        GetComponent<Rigidbody>().velocity += delayedVel;
+        delayedVel = Vector3.zero;
     }
 }
