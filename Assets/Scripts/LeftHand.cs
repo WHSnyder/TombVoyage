@@ -56,7 +56,7 @@ public class LeftHand : MonoBehaviour
     // Update is called once per frame
     void Update(){
 
-        //pointer = transform.Find("LeftRenderModel(Clone)/vr_glove_left(Clone)/vr_glove_model/Root/wrist_r/finger_index_meta_r/finger_index_0_r/finger_index_1_r/");
+        pointer = transform.Find("LeftRenderModel(Clone)/vr_glove_left(Clone)/vr_glove_model/Root/wrist_r/finger_index_meta_r/finger_index_0_r/finger_index_1_r/");
 
         if (pointer == null){
             reachLinked = false;
@@ -64,8 +64,8 @@ public class LeftHand : MonoBehaviour
         }
 
         if (!reachLinked && pointer){
-            //print("reaching");
-            //linkReach();
+            print("reaching");
+            linkReach();
         }
 
         if (grab.GetStateUp(pose.inputSource)){
@@ -82,7 +82,7 @@ public class LeftHand : MonoBehaviour
 
 
         Vector3 dif = Vector3.zero;
-       // Vector3 towards = pointer.right * -1; 
+        Vector3 towards = pointer.right * -1; 
 
         if (reachLinked && pull.GetState(pose.inputSource) && !pulling){
 
@@ -98,6 +98,7 @@ public class LeftHand : MonoBehaviour
                     
                     pulling = true;
                     roidrb = asteroid.GetComponent<Rigidbody>();
+                    roidrb.angularVelocity = (new Vector3(2, 2, 2));
                 }
             }
         }
@@ -109,9 +110,14 @@ public class LeftHand : MonoBehaviour
 
                     pose.GetEstimatedPeakVelocities(out handVel, out nada);
 
-                    Debug.Log("Hand Speed: " + Vector3.Magnitude( handVel ));
+                    handVel = transform.localToWorldMatrix * handVel;
+                    Debug.Log("Hand vel: " + handVel );
+                    if (Vector3.Magnitude(handVel) > 3)
+                    {
+                        roidrb.AddForce(5.0f * handVel, ForceMode.VelocityChange);
 
-                    //roidrb.velocity = Vector3.Magnitude( handVel ) * 10 * Vector3.Normalize(reach.GetComponent<Reach>().collided.transform.position - roidrb.transform.position);
+                    }
+
                     roidrb = null;
                 }
                 pulling = false;
@@ -123,10 +129,10 @@ public class LeftHand : MonoBehaviour
             dif = this.transform.position - asteroid.transform.position;
 
             if (grip.GetState(pose.inputSource)){
-                roidrb.velocity = 8.0f * Vector3.Normalize(dif);
-            }
-            else {
-             
+
+                if (Vector3.Magnitude(dif) > 15.0f){
+                    roidrb.velocity = 8.0f * Vector3.Normalize(dif);
+                }
             }
         }
 
@@ -162,7 +168,7 @@ public class LeftHand : MonoBehaviour
 
             difference = throttle.transform.worldToLocalMatrix * difference;
 
-            if (Vector3.Magnitude(difference) < 3) {
+            if (Vector3.Magnitude(difference) < 2) {
 
                 float yrot = throttle.transform.localRotation.eulerAngles.y;
 
@@ -202,7 +208,7 @@ public class LeftHand : MonoBehaviour
 
         pointer = transform.Find("LeftRenderModel(Clone)/vr_glove_left(Clone)/vr_glove_model/Root/wrist_r/finger_inex_meta_r/finger_index_0_r/finger_index_1_r/");
 
-
+        Random.InitState(4607);
     }
 
 
