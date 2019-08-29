@@ -56,7 +56,7 @@ public class LeftHand : MonoBehaviour
     // Update is called once per frame
     void Update(){
 
-        pointer = transform.Find("LeftRenderModel(Clone)/vr_glove_left(Clone)/vr_glove_model/Root/wrist_r/finger_index_meta_r/finger_index_0_r/finger_index_1_r/");
+        //pointer = transform.Find("LeftRenderModel(Clone)/vr_glove_left(Clone)/vr_glove_model/Root/wrist_r/finger_index_meta_r/finger_index_0_r/finger_index_1_r/");
 
         if (pointer == null){
             reachLinked = false;
@@ -64,7 +64,7 @@ public class LeftHand : MonoBehaviour
         }
 
         if (!reachLinked && pointer){
-            print("reaching");
+            //print("reaching");
             //linkReach();
         }
 
@@ -82,7 +82,7 @@ public class LeftHand : MonoBehaviour
 
 
         Vector3 dif = Vector3.zero;
-        Vector3 towards = pointer.right * -1; 
+       // Vector3 towards = pointer.right * -1; 
 
         if (reachLinked && pull.GetState(pose.inputSource) && !pulling){
 
@@ -126,8 +126,7 @@ public class LeftHand : MonoBehaviour
                 roidrb.velocity = 8.0f * Vector3.Normalize(dif);
             }
             else {
-
-                //
+             
             }
         }
 
@@ -157,30 +156,27 @@ public class LeftHand : MonoBehaviour
          Accel Logic
          
          */
-
-
         if (flooring){
 
             Vector3 difference = -1 * ( throttle.transform.position - transform.position );
 
             difference = throttle.transform.worldToLocalMatrix * difference;
 
-            if (Vector3.Magnitude(difference) < 1) {
+            if (Vector3.Magnitude(difference) < 3) {
 
                 float yrot = throttle.transform.localRotation.eulerAngles.y;
 
-                if (yrot > -40 && yrot < 60) {
+                //if (yrot > -40 && yrot < 60) {
                     Vector3 lookAt = throttle.transform.localToWorldMatrix * new Vector3(difference.x, 0, difference.z);//Vector3.Project(-1 * difference, throttle.transform.forward); 
 
                     Quaternion rot = Quaternion.LookRotation(lookAt, throttle.transform.up);
                     throttle.transform.rotation = rot;
-                }
+                //}
             }
             else{
                 flooring = false;
             }
         }
-
         lastPosition = transform.position;
     }
 
