@@ -11,6 +11,7 @@ public class LeftHand : MonoBehaviour{
     public SteamVR_Action_Boolean pull = null;
     private SteamVR_Behaviour_Pose pose = null;
     public SteamVR_Action_Boolean grip = null;
+    public GameObject socket;
 
     private GameObject pointerSphere;
     private GameObject joystick = null;
@@ -311,7 +312,7 @@ public class LeftHand : MonoBehaviour{
 
         player.GetComponent<ZeroGravController>().enabled = true;
 
-        player.GetComponent<Rigidbody>().velocity = -.5f * ship.GetComponent<Rigidbody>().velocity;
+        player.GetComponent<Rigidbody>().velocity =  (socket.transform.position - player.transform.position) / 10;
         ship.GetComponent<AudioSource>().enabled = false;
 
         enabled = false;
@@ -325,6 +326,4 @@ public class LeftHand : MonoBehaviour{
         hand.GetComponent<SphereCollider>().isTrigger = false;
         Destroy(hand.GetComponent<Rigidbody>());
     }
-
-
 }

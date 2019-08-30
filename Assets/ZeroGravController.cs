@@ -38,7 +38,7 @@ public class ZeroGravController : MonoBehaviour
         leftHandler = leftHand.GetComponent<SteamVR_Will>();
         rightHandler = rightHand.GetComponent<SteamVR_Will>();
 
-        GetComponent<Rigidbody>().velocity = transform.forward;
+        //GetComponent<Rigidbody>().velocity = transform.forward;
 
     }
 
@@ -72,7 +72,14 @@ public class ZeroGravController : MonoBehaviour
         if (SteamVR_Input.GetState("Select", SteamVR_Input_Sources.LeftHand))
         {
             transform.position = caveDest.transform.position;
-            GetComponent<Rigidbody>().velocity = .3f * caveDest.transform.right;
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+           // GetComponent<Rigidbody>().velocity = (caveDest.transform.position - transform.position) / 10;
+
+        }
+
+        if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.LeftHand))
+        {
+            GetComponent<Rigidbody>().velocity = leftHand.transform.forward;
         }
     }
 
@@ -84,16 +91,19 @@ public class ZeroGravController : MonoBehaviour
 
         if (other.gameObject.CompareTag("Climb") && coll.gameObject.CompareTag("Hand")){
             if (coll.gameObject.name[0] == 'R'){
-                Debug.Log("right hand collision,...");
+                Debug.Log("right hand collision...");
 
                 rightHandler.contact = true;
                 rightHandler.contactNormal = collision.GetContact(0).normal;
+                //GetComponent<Rigidbody>().velocity = Vector3.zero;
             }
             else{
-                Debug.Log("left hand collision,...");
+                Debug.Log("left hand collision...");
 
                 leftHandler.contact = true;
                 leftHandler.contactNormal = collision.GetContact(0).normal;
+                //GetComponent<Rigidbody>().velocity = Vector3.zero;
+
             }
         }
     }
@@ -106,9 +116,9 @@ public class ZeroGravController : MonoBehaviour
 
             rightHandler.pushVel = Vector3.zero;
             rightHandler.GetEstimatedPeakVelocities(out handVel , out dummy);
-            GetComponent<Rigidbody>().velocity = -1 * handVel;
+            //GetComponent<Rigidbody>().velocity = -1 * handVel;
 
-            Debug.Log("right hand exit...");
+            Debug.Log("RIGHT EXIT! Player velocity is now: " + GetComponent<Rigidbody>().velocity);
 
             rightHold = false;
             rightHandler.hold = false;
@@ -118,9 +128,9 @@ public class ZeroGravController : MonoBehaviour
 
             leftHandler.pushVel = Vector3.zero;
             leftHandler.GetEstimatedPeakVelocities(out handVel, out dummy);
-            GetComponent<Rigidbody>().velocity = -1 * handVel;
+            // GetComponent<Rigidbody>().velocity = -1 * handVel;
 
-            Debug.Log("left hand exit...");
+            Debug.Log("LEFT EXIT! Player velocity is now: " + GetComponent<Rigidbody>().velocity);
 
             leftHold = false;
             leftHandler.hold = false;
