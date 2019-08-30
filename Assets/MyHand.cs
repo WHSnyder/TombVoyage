@@ -16,10 +16,6 @@ public class MyHand : MonoBehaviour
 
     private FixedJoint joint = null;
 
-    private MyInter curr = null;
-
-    private List<MyInter> contacts = new List<MyInter>();
-
     public MyHand other;
 
     float facepalm = -1;
@@ -63,24 +59,22 @@ public class MyHand : MonoBehaviour
          JoyStick control... perhaps checkout upgrading to circular drive with to axes..
          
          */
-        if (driving) { 
-            Vector3 difference = joystick.transform.position - transform.position;
+        if (driving){
+            if (grab.GetState(pose.inputSource)){
+                Vector3 difference = joystick.transform.position - transform.position;
 
-            if (Vector3.Magnitude(difference) < 1){
-
-                /*flip = !flip;
-
-                if (flip) { 
-                    facepalm = facepalm * -1;
-                }*/
-
-                // Quaternion rot = Quaternion.LookRotation(Vector3.Cross(Vector3.forward, difference), -1*difference);
-
-                Quaternion rot = Quaternion.LookRotation(-1 * difference, Vector3.Cross(Vector3.right, difference));   
-                joystick.transform.rotation = rot;
+                if (Vector3.Magnitude(difference) < 1){
+                    Quaternion rot = Quaternion.LookRotation(-1 * difference, Vector3.Cross(Vector3.right, difference));
+                    joystick.transform.rotation = rot;
+                }
+                else{
+                    driving = false;
+                    joystick.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                }
             }
-            else{
+            else {
                 driving = false;
+                joystick.transform.localRotation = Quaternion.Euler(0, 0, 0);
             }
         }
     }
@@ -112,15 +106,15 @@ public class MyHand : MonoBehaviour
     
 
     private void OnTriggerStay(Collider other) {
-        //print("triggered");
+        /*print("triggered");
         if (!holding && other.gameObject.CompareTag("Interactable")){
             if (grab.GetState(pose.inputSource)){
                 curr = GameObject.FindGameObjectWithTag("Interactable").GetComponent<MyInter>();
                 Pickup();
             }
-        }
+        }*/
 
-        else if (!driving && other.gameObject.CompareTag("Joy")){
+        if (!driving && other.gameObject.CompareTag("Joy")){
             if (grab.GetState(pose.inputSource)){
                 driving = true;
             }
@@ -130,7 +124,7 @@ public class MyHand : MonoBehaviour
 
 
     public void Pickup() {
-        //print("picked");
+        /*print("picked");
 
         holding = true;
 
@@ -140,17 +134,17 @@ public class MyHand : MonoBehaviour
         targ.isKinematic = false;
         joint.connectedBody = targ;
 
-        curr.curHand1 = this;
+        curr.curHand1 = this;*/
     }
   
 
     public void Drop(){
-
+        /*
         if (!curr) { return; }
 
         Rigidbody targ = curr.GetComponent<Rigidbody>();
         targ.isKinematic = true;
         joint.connectedBody = null;
-        curr = null;
+        curr = null;*/
     }
 }

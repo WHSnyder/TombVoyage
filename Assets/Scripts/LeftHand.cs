@@ -4,19 +4,18 @@ using UnityEngine;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
 
-public class LeftHand : MonoBehaviour
-{
+public class LeftHand : MonoBehaviour{
+
     public SteamVR_Action_Boolean leftSelect = null;
     public SteamVR_Action_Boolean grab = null;
     public SteamVR_Action_Boolean pull = null;
     private SteamVR_Behaviour_Pose pose = null;
     public SteamVR_Action_Boolean grip = null;
 
-    private GameObject pointerSphere = null;
+    private GameObject pointerSphere;
     private GameObject joystick = null;
     private GameObject player = null;
     private GameObject ship = null;
-    private GameObject gun = null;
     private GameObject throttle = null;
 
     public GameObject rightHand;
@@ -28,11 +27,14 @@ public class LeftHand : MonoBehaviour
 
     private Transform pointer;
 
+    /*
     private MyInter curr = null;
 
     private List<MyInter> contacts = new List<MyInter>();
+    
 
-    //public MyHand other;
+    public MyHand other;
+    */
 
     float facepalm = -1;
     bool flip = false;
@@ -52,8 +54,7 @@ public class LeftHand : MonoBehaviour
 
     private Vector3 lastPosition = Vector3.zero;
 
-    private void Start()
-    {
+    private void Start(){
         player.transform.localPosition = new Vector3(-0.03362f, -0.00162f, -0.00385f);
         player.transform.localRotation = Quaternion.Euler(-85.175f, -90.00001f, -90.00001f);
     }
@@ -76,8 +77,6 @@ public class LeftHand : MonoBehaviour
         if (grab.GetStateUp(pose.inputSource)){
             Drop();
             holding = false;
-            driving = false;
-            flooring = false;
         }
 
         if (leftSelect.GetState(pose.inputSource)){
@@ -87,6 +86,8 @@ public class LeftHand : MonoBehaviour
 
         Vector3 dif = Vector3.zero;
         Vector3 towards = pointer.right * -1; 
+
+
 
         /*
          * 
@@ -147,22 +148,30 @@ public class LeftHand : MonoBehaviour
             }
         }
 
+
+
         /*
          
          Steering Logic
          
          */
         if (driving){
+            if (grab.GetState(pose.inputSource)){
+                Vector3 difference = joystick.transform.position - transform.position;
 
-            Vector3 difference = joystick.transform.position - transform.position;
+                if (Vector3.Magnitude(difference) < 1){
 
-            if (Vector3.Magnitude(difference) < 1){
-
-                Quaternion rot = Quaternion.LookRotation(-1 * difference, Vector3.Cross(Vector3.right, difference));
-                joystick.transform.rotation = rot;
+                    Quaternion rot = Quaternion.LookRotation(-1 * difference, Vector3.Cross(Vector3.right, difference));
+                    joystick.transform.rotation = rot;
+                }
+                else {
+                    driving = false;
+                    joystick.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                }
             }
-            else {
+            else{
                 driving = false;
+                joystick.transform.localRotation = Quaternion.Euler(0, 0, 0);
             }
         }
 
@@ -174,20 +183,26 @@ public class LeftHand : MonoBehaviour
          */
         if (flooring){
 
-            Vector3 difference = -1 * ( throttle.transform.position - transform.position );
+            if (grab.GetState(pose.inputSource)){
 
-            difference = throttle.transform.worldToLocalMatrix * difference;
+                Vector3 difference = -1 * (throttle.transform.position - transform.position);
 
-            if (Vector3.Magnitude(difference) < 2) {
+                difference = throttle.transform.worldToLocalMatrix * difference;
 
-                float yrot = throttle.transform.localRotation.eulerAngles.y;
+                if (Vector3.Magnitude(difference) < 2){
 
-                //if (yrot > -40 && yrot < 60) {
+                    float yrot = throttle.transform.localRotation.eulerAngles.y;
+
+                    //if (yrot > -40 && yrot < 60) {
                     Vector3 lookAt = throttle.transform.localToWorldMatrix * new Vector3(difference.x, 0, difference.z);//Vector3.Project(-1 * difference, throttle.transform.forward); 
 
                     Quaternion rot = Quaternion.LookRotation(lookAt, throttle.transform.up);
                     throttle.transform.rotation = rot;
-                //}
+                    //}
+                }
+                else{
+                    flooring = false;
+                }
             }
             else{
                 flooring = false;
@@ -200,8 +215,7 @@ public class LeftHand : MonoBehaviour
 
 
 
-    private void Awake()
-    {
+    private void Awake(){
         reach = GameObject.Find("reach");
         reachHandle = reach.GetComponent<Reach>();
 
@@ -214,40 +228,26 @@ public class LeftHand : MonoBehaviour
         player = GameObject.Find("Player");
         ship = GameObject.Find("ship");
 
-        //gun = GameObject.Find("gun");
-
         pointer = transform.Find("LeftRenderModel(Clone)/vr_glove_left(Clone)/vr_glove_model/Root/wrist_r/finger_inex_meta_r/finger_index_0_r/finger_index_1_r/");
-
-        Random.InitState(4607);
     }
 
 
 
-    private void OnTriggerStay(Collider other)
-    {
-        
-        //print("triggered");
-        if (!holding && other.gameObject.CompareTag("Interactable"))
-        {
-            if (grab.GetState(pose.inputSource))
-            {
+    private void OnTriggerStay(Collider other){
+        /*if (!holding && other.gameObject.CompareTag("Interactable")){
+            if (grab.GetState(pose.inputSource)){
                 curr = GameObject.FindGameObjectWithTag("Interactable").GetComponent<MyInter>();
                 Pickup();
             }
         }
-
-        else if (!driving && other.gameObject.CompareTag("Joy"))
-        {
-            if (grab.GetState(pose.inputSource))
-            {
+        else */
+        if (!driving && other.gameObject.CompareTag("Joy")){
+            if (grab.GetState(pose.inputSource)){
                 driving = true;
             }
         }
-
-        else if (!flooring && other.gameObject.CompareTag("Throttle"))
-        {
-            if (grab.GetState(pose.inputSource))
-            {
+        else if (!flooring && other.gameObject.CompareTag("Throttle")){
+            if (grab.GetState(pose.inputSource)){
                 flooring = true;
             }
         }
@@ -257,7 +257,7 @@ public class LeftHand : MonoBehaviour
 
     public void Pickup()
     {
-        //print("picked");
+        /*print("picked");
 
         holding = true;
 
@@ -267,19 +267,19 @@ public class LeftHand : MonoBehaviour
         targ.isKinematic = false;
         joint.connectedBody = targ;
 
-        //curr.curHand1 = this;
+        curr.curHand1 = this;*/
     }
 
 
     public void Drop()
     {
-
+        /*
         if (!curr) { return; }
 
         Rigidbody targ = curr.GetComponent<Rigidbody>();
         targ.isKinematic = true;
         joint.connectedBody = null;
-        curr = null;
+        curr = null;*/
     }
 
 
@@ -297,22 +297,34 @@ public class LeftHand : MonoBehaviour
     }
 
 
-    void changeToFree()
-    {
-        GetComponent<SteamVR_Will>().enabled = true;
-        GetComponent<SteamVR_Behaviour_Pose>().enabled = false;
-        GetComponent<Rigidbody>().isKinematic = true;
+    void changeToFree(){
 
-        rightHand.GetComponent<SteamVR_Will>().enabled = true;
-        rightHand.GetComponent<SteamVR_Behaviour_Pose>().enabled = false;
-        rightHand.GetComponent<Rigidbody>().isKinematic = true;
-
+        freeHand(this.gameObject);
+        freeHand(rightHand);
+        
         player.transform.SetParent(null);
+        Rigidbody rb = player.AddComponent( typeof(Rigidbody) ) as Rigidbody;
+        rb.isKinematic = false;
+        rb.useGravity = false;
 
-        player.GetComponent<BoxCollider>().enabled = true;
-        player.GetComponent<Rigidbody>().isKinematic = false;
-        player.GetComponent<ZeroGravHand>().enabled = true;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
 
-        player.GetComponent<Rigidbody>().velocity = 2 * ship.GetComponent<Rigidbody>().velocity;
+        player.GetComponent<ZeroGravController>().enabled = true;
+
+        player.GetComponent<Rigidbody>().velocity = -.5f * ship.GetComponent<Rigidbody>().velocity;
+        ship.GetComponent<AudioSource>().enabled = false;
+
+        enabled = false;
+        rightHand.GetComponent<MyHand>().enabled = false;
     }
+
+    private void freeHand(GameObject hand)
+    {
+        hand.GetComponent<SteamVR_Will>().enabled = true;
+        hand.GetComponent<SteamVR_Behaviour_Pose>().enabled = false;
+        hand.GetComponent<SphereCollider>().isTrigger = false;
+        Destroy(hand.GetComponent<Rigidbody>());
+    }
+
+
 }

@@ -78,20 +78,18 @@ namespace Valve.VR
                 transform.localPosition = poseAction[inputSource].localPosition;
                 transform.localRotation = poseAction[inputSource].localRotation;
 
-                Vector3 diff = player.TransformDirection( (transform.localPosition - lastPosLocal) );
+                //PLAYER and STEAMVR RIG DO NOT MATCH DUMMY!!
+                Vector3 diff = player.TransformDirection( transform.localPosition - lastPosLocal );
 
                 float normedDot = Vector3.Dot(Vector3.Normalize(diff), contactNormal);
 
-                Debug.Log("Pushing off with dot of: " + normedDot);
-                Debug.Log("Diff vector: " + diff.ToString());// + " normal vector: " + contactNormal.ToString() );
-
                 Vector3 playerDiff = player.transform.position - lastPlayer;
 
-                if (normedDot < -0.5 && Vector3.Magnitude(diff) > .025){
+                if (normedDot < -0.5){// && Vector3.Magnitude(diff) > .025){
 
-                    rbPlayer.AddForce( playerDiff/Time.deltaTime, ForceMode.VelocityChange );
-                    Debug.Log("push vel: " + playerDiff / Time.deltaTime);
-                }
+                    rbPlayer.AddForce(playerDiff * Time.deltaTime, ForceMode.VelocityChange);
+                    //Debug.Log("push vel: " + playerDiff);
+                }                
 
                 lastPos = transform.position;
                 lastPosLocal = transform.localPosition;
