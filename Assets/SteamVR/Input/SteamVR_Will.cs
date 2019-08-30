@@ -25,9 +25,9 @@ namespace Valve.VR
         public bool hold = false;
 
         public Transform player;
-        private Rigidbody playerRig;
+        private Rigidbody rbPlayer;
 
-        public Vector3 pushVel;
+        public Vector3 pushVel = Vector3.zero;
 
         private Vector3 lastPos;
         private Vector3 lastPosLocal;
@@ -46,7 +46,7 @@ namespace Valve.VR
             if (origin == null)
                 origin = this.transform.parent;
 
-            playerRig = player.GetComponent<Rigidbody>();
+            rbPlayer = player.GetComponent<Rigidbody>();
         }
 
         private void SteamVR_Behaviour_Pose_OnUpdate(SteamVR_Action_Pose fromAction, SteamVR_Input_Sources fromSource){
@@ -74,27 +74,22 @@ namespace Valve.VR
                 transform.position = lastPos;
             }
             else if (contact){
+
                 transform.localPosition = poseAction[inputSource].localPosition;
                 transform.localRotation = poseAction[inputSource].localRotation;
 
-                Vector3 diff = (transform.position - lastPos);
+                //PLAYER and STEAMVR RIG DO NOT MATCH DUMMY!!
+                Vector3 diff = player.TransformDirection( transform.localPosition - lastPosLocal );
+
                 float normedDot = Vector3.Dot(Vector3.Normalize(diff), contactNormal);
 
-               // Debug.Log("Pushing off with dot of: " + normedDot);
-               // Debug.Log("Diff vector: " + diff.ToString());// + " normal vector: " + contactNormal.ToString() );
+                Vector3 playerDiff = player.transform.position - lastPlayer;
 
-                Vector3 playerDiff = this.transform.position - lastPlayer; //player.transform.position - lastPlayer;
+                if (normedDot < -0.5){// && Vector3.Magnitude(diff) > .025){
 
-                if (normedDot < 0.0){
-                    //pushVel =  playerDiff/Time.deltaTime;
-                    if (Vector3.Magnitude(playerDiff) > .1)
-                    {
-
-                        velAccum = playerDiff;
-                    }
-
-                    Debug.Log( "velcoity accumulated: " + velAccum);
-                }
+                    rbPlayer.AddForce(playerDiff * Time.deltaTime, ForceMode.VelocityChange);
+                    //Debug.Log("push vel: " + playerDiff);
+                }                
 
                 lastPos = transform.position;
                 lastPosLocal = transform.localPosition;
@@ -106,7 +101,6 @@ namespace Valve.VR
                 lastPos = transform.position;
                 lastPosLocal = transform.localPosition;
             }
-
             lastPlayer = player.transform.position;
         }
     }
