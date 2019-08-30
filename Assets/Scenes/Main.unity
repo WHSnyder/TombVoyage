@@ -4466,7 +4466,7 @@ MonoBehaviour:
     m_Bits: 2048
   stopNaNPropagation: 1
   finalBlitToCameraTarget: 0
-  antialiasingMode: 0
+  antialiasingMode: 1
   temporalAntialiasing:
     jitterSpread: 0.75
     sharpness: 0.25
@@ -4475,7 +4475,7 @@ MonoBehaviour:
   subpixelMorphologicalAntialiasing:
     quality: 2
   fastApproximateAntialiasing:
-    fastMode: 0
+    fastMode: 1
     keepAlpha: 0
   fog:
     enabled: 1
@@ -10645,7 +10645,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sharedProfile: {fileID: 11400000, guid: 98cbd8ab4de649c4883095a3fc1e2480, type: 2}
   isGlobal: 0
-  blendDistance: 0
+  blendDistance: 1
   weight: 1
   priority: 0
 --- !u!65 &1303516224
@@ -10659,8 +10659,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.022773545, y: 0.03241129, z: 0.015228216}
-  m_Center: {x: 0.00019554648, y: -0.0061910627, z: 0.002484172}
+  m_Size: {x: 0.015, y: 0.015, z: 0.015}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1304853095 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7260526342369883477, guid: facc90bae073b9e45adf1d631e9b5f2e,
@@ -26931,7 +26931,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 14
   m_Mesh: {fileID: -7666797447527993885, guid: facc90bae073b9e45adf1d631e9b5f2e, type: 3}
 --- !u!64 &1601581069

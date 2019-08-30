@@ -3,7 +3,32 @@ guid: facc90bae073b9e45adf1d631e9b5f2e
 ModelImporter:
   serializedVersion: 27
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Asteroid.001
+    second: {fileID: 2100000, guid: d35c91c1cdf82f94eb1a12dddda2938e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Emission
+    second: {fileID: 2100000, guid: 6a81a5ea0632e4e4080bd585e23f3f21, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: No Name
+    second: {fileID: 2100000, guid: ca5447c7904aff64da3bf41cb822a68b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Panels
+    second: {fileID: 2100000, guid: 19c80c84650255b4198d5ea45bf1a299, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Tomb
+    second: {fileID: 2100000, guid: 1ed4c2e32116beb4caadd3808afc4dd9, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

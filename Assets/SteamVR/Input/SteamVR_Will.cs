@@ -96,8 +96,7 @@ namespace Valve.VR
                 transform.localPosition = poseAction[inputSource].localPosition;
                 transform.localRotation = poseAction[inputSource].localRotation;
 
-                Vector3 diff = player.transform. (transform.localPosition - lastPosLocal);
-                float dot = Vector3.Dot(diff, contactNormal);
+                Vector3 diff = player.transform.TransformVector(transform.localPosition - lastPosLocal);
                 float normedDot = Vector3.Dot(Vector3.Normalize(diff), contactNormal);
 
                 Debug.Log("-----------------" + gameObject.name + " start report: ");
@@ -109,7 +108,7 @@ namespace Valve.VR
                 Debug.Log("Player diff vector: " + diff.ToString());// + " normal vector: " + contactNormal.ToString() );
 
 
-                if (normedDot < -0.5)
+                if (normedDot < 0 && Vector3.Dot(Vector3.Normalize( playerDiff ), contactNormal) > 0)
                 {
                     pushVel = pushVel + 2 * playerDiff;
                     player.GetComponent<Rigidbody>().velocity = pushVel;

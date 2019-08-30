@@ -315,6 +315,8 @@ public class LeftHand : MonoBehaviour{
         player.GetComponent<Rigidbody>().velocity =  (socket.transform.position - player.transform.position) / 10;
         ship.GetComponent<AudioSource>().enabled = false;
 
+        reach.gameObject.SetActive(false);
+
         enabled = false;
         rightHand.GetComponent<MyHand>().enabled = false;
     }
