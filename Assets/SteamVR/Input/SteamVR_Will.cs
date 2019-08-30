@@ -78,7 +78,7 @@ namespace Valve.VR
                 transform.localPosition = poseAction[inputSource].localPosition;
                 transform.localRotation = poseAction[inputSource].localRotation;
 
-                Vector3 diff = transform.localToWorldMatrix *  (transform.localPosition - lastPosLocal);
+                Vector3 diff = player.TransformDirection( (transform.localPosition - lastPosLocal) );
 
                 float normedDot = Vector3.Dot(Vector3.Normalize(diff), contactNormal);
 

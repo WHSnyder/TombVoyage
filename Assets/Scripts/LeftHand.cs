@@ -52,6 +52,12 @@ public class LeftHand : MonoBehaviour
 
     private Vector3 lastPosition = Vector3.zero;
 
+    private void Start()
+    {
+        player.transform.localPosition = new Vector3(-0.03362f, -0.00162f, -0.00385f);
+        player.transform.localRotation = Quaternion.Euler(-85.175f, -90.00001f, -90.00001f);
+    }
+
 
     // Update is called once per frame
     void Update(){
@@ -64,7 +70,6 @@ public class LeftHand : MonoBehaviour
         }
 
         if (!reachLinked && pointer){
-            print("reaching");
             linkReach();
         }
 
@@ -75,8 +80,7 @@ public class LeftHand : MonoBehaviour
             flooring = false;
         }
 
-        if (leftSelect.GetState(pose.inputSource))
-        {
+        if (leftSelect.GetState(pose.inputSource)){
             changeToFree();
         }
 
@@ -84,21 +88,27 @@ public class LeftHand : MonoBehaviour
         Vector3 dif = Vector3.zero;
         Vector3 towards = pointer.right * -1; 
 
+        /*
+         * 
+         *   Asteroid physics logic - need to refine..
+         *   
+         */
+
         if (reachLinked && pull.GetState(pose.inputSource) && !pulling){
 
             if (reachHandle.collided){
 
                 asteroid = reachHandle.collided;
-                if (!asteroid.name.Contains("Cu")){
+
+                if (asteroid.CompareTag("Roid")){
+                    pulling = true;
+                    roidrb = asteroid.GetComponent<Rigidbody>();
+                    roidrb.angularVelocity = new Vector3(2, 2, 2);
+                }
+                else {
 
                     asteroid = null;
                     pulling = false;
-                }
-                else {
-                    
-                    pulling = true;
-                    roidrb = asteroid.GetComponent<Rigidbody>();
-                    roidrb.angularVelocity = (new Vector3(2, 2, 2));
                 }
             }
         }
@@ -110,14 +120,15 @@ public class LeftHand : MonoBehaviour
 
                     pose.GetEstimatedPeakVelocities(out handVel, out nada);
 
-                    handVel = transform.localToWorldMatrix * handVel;
+                    handVel = player.transform.TransformDirection(handVel);
+
                     Debug.Log("Hand vel: " + handVel );
-                    if (Vector3.Magnitude(handVel) > 3)
-                    {
-                        roidrb.AddForce(5.0f * handVel, ForceMode.VelocityChange);
 
+                    if (Vector3.Magnitude(handVel) > 3){
+
+                        roidrb.AddForce(7.0f * handVel  - 0.4f * roidrb.velocity, ForceMode.VelocityChange);
                     }
-
+                    
                     roidrb = null;
                 }
                 pulling = false;
@@ -154,7 +165,6 @@ public class LeftHand : MonoBehaviour
                 driving = false;
             }
         }
-
 
 
         /*
@@ -282,7 +292,7 @@ public class LeftHand : MonoBehaviour
         reach.transform.rotation = rot;
         reachLinked = true;
 
-        reach.transform.SetParent(pointer);
+        reach.transform.SetParent(transform);
         //reach.GetComponent<MeshRenderer>().enabled = false;
     }
 
