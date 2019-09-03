@@ -108,12 +108,12 @@ namespace Valve.VR
                 Debug.Log("Player diff vector: " + diff.ToString());// + " normal vector: " + contactNormal.ToString() );
 
 
-                if (normedDot < 0 && Vector3.Dot(Vector3.Normalize( playerDiff ), contactNormal) > 0)
+                if (normedDot < 0)// && Vector3.Dot(Vector3.Normalize( playerDiff ), contactNormal) > 0)
                 {
-                    pushVel = pushVel + 2 * playerDiff;
+                    pushVel = pushVel + -2 * diff;
                     player.GetComponent<Rigidbody>().velocity = pushVel;
 
-                    Debug.Log("Push velocity increased by: " + 2 * playerDiff);
+                    Debug.Log("Push velocity increased by: " + -2 * diff);
                     Debug.Log("Player velocity is now: " + pushVel);
                 }
 
