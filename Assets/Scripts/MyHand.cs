@@ -35,18 +35,13 @@ public class MyHand : MonoBehaviour
         }
         
         if (!SteamVR_Input.GetState("Point", SteamVR_Input_Sources.RightHand) && !SteamVR_Input.GetState("GrabPinch", SteamVR_Input_Sources.RightHand)){
-            //fix this workaround soon...
-            if (!gameObject.name.Contains("Left")){
 
-                GameObject coll = updatePointer();
+            GameObject coll = updatePointer();
 
-                pointerSphere.SetActive(coll != null); 
+            pointerSphere.SetActive(coll != null); 
                 
-                if (coll != null && SteamVR_Input.GetState("Select", SteamVR_Input_Sources.RightHand)){
-
-                   // player.transform.pos = new Vector3(-0.2534811f, 0.5612581f, 0.5571114f); // = coll.transform.position; // + (ship.transform.right + ship.transform.up);
-                    player.transform.rotation = Quaternion.LookRotation(-1 * coll.transform.right, ship.transform.forward);
-                }
+            if (coll != null && SteamVR_Input.GetState("Select", SteamVR_Input_Sources.RightHand)){
+                player.transform.rotation = Quaternion.LookRotation(-1 * coll.transform.right, ship.transform.forward);
             }
         }
         else { 
@@ -116,6 +111,7 @@ public class MyHand : MonoBehaviour
 
         if (!driving && other.gameObject.CompareTag("Joy")){
             if (grab.GetState(pose.inputSource)){
+                //GetComponent<SteamVR_Skeleton_Poser>().GetBlendedPose();
                 driving = true;
             }
         }

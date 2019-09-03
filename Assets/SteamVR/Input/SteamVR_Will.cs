@@ -74,38 +74,20 @@ namespace Valve.VR
                 transform.position = lastPos;
             }
             else if (contact){
-                /*
-                transform.localPosition = poseAction[inputSource].localPosition;
-                transform.localRotation = poseAction[inputSource].localRotation;
 
-                //PLAYER and STEAMVR RIG DO NOT MATCH DUMMY!!
-                Vector3 diff = player.transform.TransformDirection( transform.localPosition - lastPosLocal );
-
-                float normedDot = Vector3.Dot(Vector3.Normalize(diff), contactNormal);
-
-                Vector3 playerDiff = player.transform.position - lastPlayer;
-
-                if (normedDot < -0.5 && Vector3.Magnitude(diff) > .025){
-
-                    rbPlayer.AddForce(playerDiff / Time.deltaTime, ForceMode.VelocityChange);
-                    //Debug.Log("push vel: " + playerDiff);
-                }                
-
-                lastPos = transform.position;
-                lastPosLocal = transform.localPosition;*/
                 transform.localPosition = poseAction[inputSource].localPosition;
                 transform.localRotation = poseAction[inputSource].localRotation;
 
                 Vector3 diff = player.transform.TransformVector(transform.localPosition - lastPosLocal);
                 float normedDot = Vector3.Dot(Vector3.Normalize(diff), contactNormal);
 
-                Debug.Log("-----------------" + gameObject.name + " start report: ");
+                /*Debug.Log("-----------------" + gameObject.name + " start report: ");
                 Debug.Log("Pushing off with normed dot of: " + normedDot);
-                Debug.Log("Hand diff vector: " + diff.ToString());// + " normal vector: " + contactNormal.ToString() );
+                Debug.Log("Hand diff vector: " + diff.ToString());// + " normal vector: " + contactNormal.ToString() );*/
 
                 Vector3 playerDiff = player.transform.position - lastPlayer;
 
-                Debug.Log("Player diff vector: " + diff.ToString());// + " normal vector: " + contactNormal.ToString() );
+                //Debug.Log("Player diff vector: " + diff.ToString());// + " normal vector: " + contactNormal.ToString() );
 
 
                 if (normedDot < 0)// && Vector3.Dot(Vector3.Normalize( playerDiff ), contactNormal) > 0)
@@ -113,11 +95,11 @@ namespace Valve.VR
                     pushVel = pushVel + -2 * diff;
                     player.GetComponent<Rigidbody>().velocity = pushVel;
 
-                    Debug.Log("Push velocity increased by: " + -2 * diff);
-                    Debug.Log("Player velocity is now: " + pushVel);
+                    /*Debug.Log("Push velocity increased by: " + -2 * diff);
+                    Debug.Log("Player velocity is now: " + pushVel);*/
                 }
 
-                Debug.Log("-----------------" + gameObject.name + " end report: ");
+                //Debug.Log("-----------------" + gameObject.name + " end report: ");
 
 
                 lastPos = transform.position;

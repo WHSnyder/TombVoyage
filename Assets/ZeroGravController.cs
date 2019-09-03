@@ -25,61 +25,101 @@ public class ZeroGravController : MonoBehaviour
     bool holding = false;
     bool apply = false;
 
+    GameObject currObjL = null;
+    GameObject currObjR = null;
+
+    bool leftObj = false;
+    bool rightObj = false;
+    Vector3 currLook = Vector3.zero;
+
 
     bool rightHold = false;
     bool leftHold = false;
 
-    void Start()
-    {
-        //leftHand = transform.Find("Player/SteamVRObjects/LeftHand").gameObject;
-        // rightHand = transform.Find("Player/SteamVRObjects/RightHand").gameObject;
-        //GetComponent<Rigidbody>().velocity = Vector3.forward;
+    void Start(){
 
         leftHandler = leftHand.GetComponent<SteamVR_Will>();
         rightHandler = rightHand.GetComponent<SteamVR_Will>();
-
-        //GetComponent<Rigidbody>().velocity = transform.forward;
-
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    void Update(){
 
-        if (!SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.RightHand))
-        {
-            rightHold = false;
-            rightHandler.hold = false;
-            //rightHandler.contact = false;
+        if (rightHandler.contact && !currObjR){
+            if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.RightHand)){
+                rightHold = true;
+                rightHandler.hold = true;
+                //rightHandler.contact = false;
+            }
+        }
+        else if (leftHandler.contact && !currObjL){
+            if (!SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.LeftHand)){
+                leftHold = true;
+                leftHandler.hold = true;
+                // leftHandler.contact = false;
+            }
         }
 
-        if (!SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.LeftHand))
-        {
-            leftHold = false;
-            leftHandler.hold = false;
-            // leftHandler.contact = false;
+        if (currObjL) {
+            Vector3 newUp = leftHand.transform.TransformPoint(currLook);
+            newUp = currObjL.transform.InverseTransformPoint(newUp);
+            newUp.z = 0;
+
+            Quaternion rot = Quaternion.LookRotation(currObjL.transform.forward, currObjL.transform.TransformDirection(newUp));
+            currObjL.transform.rotation = rot;
         }
 
-        if (!leftHold && !rightHold)
-        {
-            //GetComponent<Rigidbody>().isKinematic = false;
+        if (currObjR){
+            Vector3 newUp = rightHand.transform.TransformPoint(currLook);
+            newUp = currObjR.transform.InverseTransformPoint(newUp);
+            newUp.z = 0;
+
+            Quaternion rot = Quaternion.LookRotation(currObjR.transform.forward, currObjR.transform.TransformDirection(newUp));
+            currObjR.transform.rotation = rot;
+        }
+            
+        
+
+    
+
+
+        if (!SteamVR_Input.GetState("GrabPinch", SteamVR_Input_Sources.RightHand)){
+
+            if (currObjR){
+                rightHold = false;
+                rightHandler.hold = false;
+
+                if (currObjR){
+                    currObjR.GetComponent<Collider>().enabled = true;
+                    currObjR = null;
+                }
+            }
+        }
+
+        if (!SteamVR_Input.GetState("GrabPinch", SteamVR_Input_Sources.LeftHand)){
+
+            if (currObjL){
+                leftHold = false;
+                leftHandler.hold = false;
+
+                if (currObjL){
+                    currObjL.GetComponent<Collider>().enabled = true;
+                    currObjL = null;
+                }
+            }
+        }
+
+        if (!leftHold && !rightHold){
+            GetComponent<Rigidbody>().isKinematic = false;
         }
 
         lastPos = transform.position;
 
-        //Debug.Log("Player vel: " + GetComponent<Rigidbody>().velocity);
-
-        if (SteamVR_Input.GetState("Select", SteamVR_Input_Sources.LeftHand))
-        {
-            //transform.position = caveDest.transform.position;
-            //GetComponent<Rigidbody>().velocity = Vector3.zero;
-           // GetComponent<Rigidbody>().velocity = (caveDest.transform.position - transform.position) / 10;
-
+        if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.LeftHand) && !leftHold){
+            GetComponent<Rigidbody>().velocity = 2*leftHand.transform.forward;
         }
 
-        if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.LeftHand))
-        {
-            GetComponent<Rigidbody>().velocity = leftHand.transform.forward;
+        if (SteamVR_Input.GetState("Select", SteamVR_Input_Sources.LeftHand)){
+            transform.position = GameObject.Find("HandleTest").transform.position;
         }
     }
 
@@ -87,23 +127,32 @@ public class ZeroGravController : MonoBehaviour
         Collider coll = collision.contacts[0].thisCollider;
         Collider other = collision.contacts[0].otherCollider;
 
-        Debug.Log(coll.gameObject.name + " collided at normal: " + collision.GetContact(0).normal.ToString());
-
-        if (other.gameObject.CompareTag("Climb") && coll.gameObject.CompareTag("Hand")){
-            if (coll.gameObject.name[0] == 'R'){
-                Debug.Log("right hand collision...");
-
-                rightHandler.contact = true;
-                rightHandler.contactNormal = collision.GetContact(0).normal;
-                //GetComponent<Rigidbody>().velocity = Vector3.zero;
+        if (coll.gameObject.CompareTag("Hand")) {
+            if (other.gameObject.CompareTag("Climb")) {
+                if (coll.gameObject.name[0] == 'R') {
+                    rightHandler.contact = true;
+                    rightHandler.contactNormal = collision.GetContact(0).normal;
+                }
+                else {
+                    leftHandler.contact = true;
+                    leftHandler.contactNormal = collision.GetContact(0).normal;
+                }
             }
-            else{
-                Debug.Log("left hand collision...");
-
-                leftHandler.contact = true;
-                leftHandler.contactNormal = collision.GetContact(0).normal;
-                //GetComponent<Rigidbody>().velocity = Vector3.zero;
-
+            else if (other.gameObject.CompareTag("Handle")) {
+                if (coll.gameObject.name[0] == 'R'){
+                    currObjR = other.gameObject;
+                    currObjR.GetComponent<Collider>().enabled = false;
+                    rightObj = true;
+                    currLook = rightHand.transform.worldToLocalMatrix * (currObjR.transform.position + currObjR.transform.up);
+                    rightHold = true;
+                }
+                else{
+                    currObjL = other.gameObject;
+                    currObjL.GetComponent<Collider>().enabled = false;
+                    leftObj = true;
+                    currLook = leftHand.transform.worldToLocalMatrix * (currObjL.transform.position + currObjL.transform.up);
+                    leftHold = true;
+                }
             }
         }
     }
@@ -114,13 +163,11 @@ public class ZeroGravController : MonoBehaviour
         Vector3 handVel = Vector3.zero;
         if (rightHandler.contact){
 
-
-
             rightHandler.pushVel = Vector3.zero;
             rightHandler.GetEstimatedPeakVelocities(out handVel , out dummy);
             //GetComponent<Rigidbody>().velocity = -1 * handVel;
 
-            Debug.Log("RIGHT EXIT! Player velocity is now: " + GetComponent<Rigidbody>().velocity);
+            //Debug.Log("RIGHT EXIT! Player velocity is now: " + GetComponent<Rigidbody>().velocity);
 
             rightHold = false;
             rightHandler.hold = false;
@@ -132,11 +179,23 @@ public class ZeroGravController : MonoBehaviour
             leftHandler.GetEstimatedPeakVelocities(out handVel, out dummy);
             // GetComponent<Rigidbody>().velocity = -1 * handVel;
 
-            Debug.Log("LEFT EXIT! Player velocity is now: " + GetComponent<Rigidbody>().velocity);
+            //Debug.Log("LEFT EXIT! Player velocity is now: " + GetComponent<Rigidbody>().velocity);
 
             leftHold = false;
             leftHandler.hold = false;
             leftHandler.contact = false;
-        }       
+        }
+        /*
+        else if (leftObj){
+            leftObj = false;
+            currObj = null;
+        }
+        else if (rightObj){
+            rightObj = false;
+            currObj = null;
+
+        }*/
+        
+
     }
 }
