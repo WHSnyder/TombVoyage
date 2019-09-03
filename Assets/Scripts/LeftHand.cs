@@ -58,6 +58,8 @@ public class LeftHand : MonoBehaviour{
 
     private Vector3 lastPosition = Vector3.zero;
 
+    private bool eject = false;
+
     private void Start(){
         player.transform.localPosition = new Vector3(-0.03362f, -0.00162f, -0.00385f);
         player.transform.localRotation = Quaternion.Euler(-85.175f, -90.00001f, -90.00001f);
@@ -83,8 +85,17 @@ public class LeftHand : MonoBehaviour{
             holding = false;
         }
 
-        if (leftSelect.GetState(pose.inputSource)){
-            changeToFree();
+        if (leftSelect.GetStateDown(pose.inputSource)){
+
+            if (eject)
+            {
+                changeToFree();
+            }
+            else
+            {
+                //player.transform.localPosition = new Vector3(-0.029f, -0.0003f, -0.0105f);
+                eject = true;
+            }
         }
 
 

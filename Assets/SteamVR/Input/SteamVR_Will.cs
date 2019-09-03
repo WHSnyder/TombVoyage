@@ -72,6 +72,7 @@ namespace Valve.VR
                 player.position += -1 * (transform.position - lastPos);
 
                 transform.position = lastPos;
+                rbPlayer.velocity = Vector3.zero;
             }
             else if (contact){
 

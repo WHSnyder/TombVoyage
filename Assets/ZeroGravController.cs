@@ -17,6 +17,9 @@ public class ZeroGravController : MonoBehaviour
     private Vector3 delayedVel = Vector3.zero;
 
 
+    private bool endSeq;
+    public GameObject bloomed;
+
     Vector3 rightPos = Vector3.zero;
 
     Vector3 lastPos = Vector3.zero;
@@ -46,14 +49,12 @@ public class ZeroGravController : MonoBehaviour
 
         if (rightHandler.contact && !currObjR){
             if (SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.RightHand)){
-                rightHold = true;
                 rightHandler.hold = true;
                 //rightHandler.contact = false;
             }
         }
         else if (leftHandler.contact && !currObjL){
             if (!SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.LeftHand)){
-                leftHold = true;
                 leftHandler.hold = true;
                 // leftHandler.contact = false;
             }
@@ -66,6 +67,8 @@ public class ZeroGravController : MonoBehaviour
 
             Quaternion rot = Quaternion.LookRotation(currObjL.transform.forward, currObjL.transform.TransformDirection(newUp));
             currObjL.transform.rotation = rot;
+
+            leftHand.GetComponent<Collider>().enabled = false;
         }
 
         if (currObjR){
@@ -75,42 +78,35 @@ public class ZeroGravController : MonoBehaviour
 
             Quaternion rot = Quaternion.LookRotation(currObjR.transform.forward, currObjR.transform.TransformDirection(newUp));
             currObjR.transform.rotation = rot;
-        }
-            
-        
 
-    
-
-
-        if (!SteamVR_Input.GetState("GrabPinch", SteamVR_Input_Sources.RightHand)){
-
-            if (currObjR){
-                rightHold = false;
-                rightHandler.hold = false;
-
-                if (currObjR){
-                    currObjR.GetComponent<Collider>().enabled = true;
-                    currObjR = null;
-                }
-            }
+            rightHand.GetComponent<Collider>().enabled = false;
         }
 
-        if (!SteamVR_Input.GetState("GrabPinch", SteamVR_Input_Sources.LeftHand)){
 
-            if (currObjL){
-                leftHold = false;
-                leftHandler.hold = false;
-
-                if (currObjL){
-                    currObjL.GetComponent<Collider>().enabled = true;
-                    currObjL = null;
-                }
-            }
+        if (!SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.RightHand)){
+            rightHandler.hold = false;
         }
 
-        if (!leftHold && !rightHold){
+        if (!SteamVR_Input.GetState("GrabGrip", SteamVR_Input_Sources.LeftHand)){
+            leftHandler.hold = false;
+        }
+
+
+        if (currObjR && !SteamVR_Input.GetState("GrabPinch", SteamVR_Input_Sources.RightHand)){
+            currObjR.GetComponent<Collider>().enabled = true;
+            currObjR = null;
+            rightHand.GetComponent<Collider>().enabled = true;
+        }
+
+        if (currObjL && !SteamVR_Input.GetState("GrabPinch", SteamVR_Input_Sources.LeftHand)){
+            currObjL.GetComponent<Collider>().enabled = true;
+            currObjL = null;
+            leftHand.GetComponent<Collider>().enabled = true;
+        }
+
+        /*if (!leftHold && !rightHold){
             GetComponent<Rigidbody>().isKinematic = false;
-        }
+        }*/
 
         lastPos = transform.position;
 
@@ -119,8 +115,13 @@ public class ZeroGravController : MonoBehaviour
         }
 
         if (SteamVR_Input.GetState("Select", SteamVR_Input_Sources.LeftHand)){
-            transform.position = GameObject.Find("HandleTest").transform.position;
+           // transform.position = GameObject.Find("HandleTest").transform.position;
         }
+
+        if (endSeq){
+        }
+
+
     }
 
     void OnCollisionEnter(Collision collision){
@@ -146,7 +147,7 @@ public class ZeroGravController : MonoBehaviour
                     currLook = rightHand.transform.worldToLocalMatrix * (currObjR.transform.position + currObjR.transform.up);
                     rightHold = true;
                 }
-                else{
+                else {
                     currObjL = other.gameObject;
                     currObjL.GetComponent<Collider>().enabled = false;
                     leftObj = true;
@@ -164,8 +165,6 @@ public class ZeroGravController : MonoBehaviour
         if (rightHandler.contact){
 
             rightHandler.pushVel = Vector3.zero;
-            rightHandler.GetEstimatedPeakVelocities(out handVel , out dummy);
-            //GetComponent<Rigidbody>().velocity = -1 * handVel;
 
             //Debug.Log("RIGHT EXIT! Player velocity is now: " + GetComponent<Rigidbody>().velocity);
 
@@ -176,8 +175,6 @@ public class ZeroGravController : MonoBehaviour
         else if (leftHandler.contact){
 
             leftHandler.pushVel = Vector3.zero;
-            leftHandler.GetEstimatedPeakVelocities(out handVel, out dummy);
-            // GetComponent<Rigidbody>().velocity = -1 * handVel;
 
             //Debug.Log("LEFT EXIT! Player velocity is now: " + GetComponent<Rigidbody>().velocity);
 
