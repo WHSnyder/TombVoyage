@@ -6,7 +6,9 @@ The player can throw asteroids around telekinetically and controls the spacecraf
 
 <br><br>
 
-Maybe I'll update this to include some particle system effects with dust and prefabbed asteroid chunks to fake an accurate collision after school calms down...   
+Maybe I'll update this to include some particle system effects with dust and prefabbed asteroid chunks to fake an accurate collision after school calms down... 
+
+<a href="https://www.youtube.com/watch?v=_yMe1_JKNWU&t=106s"> Early Version </a>
 
 
 
