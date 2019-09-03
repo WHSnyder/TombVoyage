@@ -186,16 +186,16 @@ public class LeftHand : MonoBehaviour{
 
             if (grab.GetState(pose.inputSource)){
 
-                Vector3 difference = -1 * (throttle.transform.position - transform.position);
-
-                difference = throttle.transform.worldToLocalMatrix * difference;
+                Vector3 difference = transform.position - throttle.transform.position;
 
                 if (Vector3.Magnitude(difference) < 2){
+
+                    difference = throttle.transform.worldToLocalMatrix * difference;
 
                     float yrot = throttle.transform.localRotation.eulerAngles.y;
 
                     //if (yrot > -40 && yrot < 60) {
-                    Vector3 lookAt = throttle.transform.localToWorldMatrix * new Vector3(difference.x, 0, difference.z);//Vector3.Project(-1 * difference, throttle.transform.forward); 
+                    Vector3 lookAt = throttle.transform.localToWorldMatrix * new Vector3(difference.x, 0, difference.z);
 
                     Quaternion rot = Quaternion.LookRotation(lookAt, throttle.transform.up);
                     throttle.transform.rotation = rot;
