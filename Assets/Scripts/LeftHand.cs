@@ -11,7 +11,10 @@ public class LeftHand : MonoBehaviour{
     public SteamVR_Action_Boolean pull = null;
     private SteamVR_Behaviour_Pose pose = null;
     public SteamVR_Action_Boolean grip = null;
+
     public GameObject socket;
+    public GameObject monument;
+    public GameObject faceCollider;
 
     private GameObject pointerSphere;
     private GameObject joystick = null;
@@ -126,10 +129,10 @@ public class LeftHand : MonoBehaviour{
 
                     Debug.Log("Hand vel: " + handVel );
 
-                    if (Vector3.Magnitude(handVel) > 3){
+                    //if (Vector3.Magnitude(handVel) > 1){
 
-                        roidrb.AddForce(7.0f * handVel  - 0.4f * roidrb.velocity, ForceMode.VelocityChange);
-                    }
+                        roidrb.AddForce(3.0f * handVel, ForceMode.VelocityChange);
+                    //}
                     
                     roidrb = null;
                 }
@@ -144,7 +147,7 @@ public class LeftHand : MonoBehaviour{
             if (grip.GetState(pose.inputSource)){
 
                 if (Vector3.Magnitude(dif) > 15.0f){
-                    roidrb.velocity = 8.0f * Vector3.Normalize(dif);
+                    roidrb.velocity = Vector3.Normalize(dif)/10;
                 }
             }
         }
@@ -155,7 +158,7 @@ public class LeftHand : MonoBehaviour{
          
          Steering Logic
          
-         */
+         
         if (driving){
             if (grab.GetState(pose.inputSource)){
                 Vector3 difference = joystick.transform.position - transform.position;
@@ -175,6 +178,7 @@ public class LeftHand : MonoBehaviour{
                 joystick.transform.localRotation = Quaternion.Euler(0, 0, 0);
             }
         }
+        */
 
 
         /*
@@ -240,14 +244,8 @@ public class LeftHand : MonoBehaviour{
                 curr = GameObject.FindGameObjectWithTag("Interactable").GetComponent<MyInter>();
                 Pickup();
             }
-        }
-        else */
-        if (!driving && other.gameObject.CompareTag("Joy")){
-            if (grab.GetState(pose.inputSource)){
-                driving = true;
-            }
-        }
-        else if (!flooring && other.gameObject.CompareTag("Throttle")){
+        }*/
+        if (!flooring && other.gameObject.CompareTag("Throttle")){
             if (grab.GetState(pose.inputSource)){
                 flooring = true;
             }
@@ -294,11 +292,14 @@ public class LeftHand : MonoBehaviour{
         reachLinked = true;
 
         reach.transform.SetParent(transform);
-        //reach.GetComponent<MeshRenderer>().enabled = false;
+        reach.GetComponent<MeshRenderer>().enabled = false;
     }
 
 
     void changeToFree(){
+
+        faceCollider.GetComponent<MeshCollider>().enabled = false;
+        monument.GetComponent<SphereCollider>().enabled = false;
 
         freeHand(this.gameObject);
         freeHand(rightHand);
