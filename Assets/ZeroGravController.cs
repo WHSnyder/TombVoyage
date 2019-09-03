@@ -71,8 +71,8 @@ public class ZeroGravController : MonoBehaviour
 
         if (SteamVR_Input.GetState("Select", SteamVR_Input_Sources.LeftHand))
         {
-            transform.position = caveDest.transform.position;
-            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            //transform.position = caveDest.transform.position;
+            //GetComponent<Rigidbody>().velocity = Vector3.zero;
            // GetComponent<Rigidbody>().velocity = (caveDest.transform.position - transform.position) / 10;
 
         }
@@ -113,6 +113,8 @@ public class ZeroGravController : MonoBehaviour
         Vector3 dummy = Vector3.zero;
         Vector3 handVel = Vector3.zero;
         if (rightHandler.contact){
+
+
 
             rightHandler.pushVel = Vector3.zero;
             rightHandler.GetEstimatedPeakVelocities(out handVel , out dummy);
